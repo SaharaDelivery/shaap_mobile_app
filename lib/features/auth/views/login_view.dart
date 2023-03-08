@@ -20,11 +20,7 @@ import 'package:shaap_mobile_app/utils/text_input.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
 class LoginView extends ConsumerStatefulWidget {
-  final String? email;
-  const LoginView({
-    super.key,
-    this.email,
-  });
+  const LoginView({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _LoginViewState();
@@ -53,12 +49,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => const SignUpView(),
     ));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _emailController.text = widget.email ?? '';
   }
 
   void loginUser() {

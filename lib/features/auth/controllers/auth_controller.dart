@@ -6,9 +6,14 @@ import 'package:shaap_mobile_app/features/auth/models/request_model.dart';
 import 'package:shaap_mobile_app/features/auth/repositories/auth_repository.dart';
 import 'package:shaap_mobile_app/features/auth/views/login_view.dart';
 import 'package:shaap_mobile_app/features/auth/views/profile_details_form.dart';
+import 'package:shaap_mobile_app/features/dummy_home_view.dart';
 import 'package:shaap_mobile_app/main.dart';
+import 'package:shaap_mobile_app/models/user_model.dart';
+import 'package:shaap_mobile_app/utils/shared_prefs.dart';
 import 'package:shaap_mobile_app/utils/type_defs.dart';
 import 'package:shaap_mobile_app/utils/utils.dart';
+
+final userProvider = StateProvider<UserModel?>((ref) => null);
 
 final authControllerProvider = StateNotifierProvider<AuthController, bool>(
   (ref) {
@@ -39,48 +44,15 @@ class AuthController extends StateNotifier<bool> {
         _ref = ref,
         super(false);
 
-  Future<void> signUpUser(
-      {required BuildContext context,
-      required String email,
-      required String password}) async {
+//! sign up
+  Future<void> signUpUser({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
     state = true;
     final response =
         await _authRepository.signUpUser(email: email, password: password);
-    log(email.toString());
-    state = false;
-    response.fold(
-      (l) => showBanner(
-        context: context,
-        theMessage: l.message,
-        theType: NotificationType.failure,
-      ),
-      (r) {
-        if (r == 'success') {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => LoginView(
-                email: email,
-              ),
-            ),
-          );
-        } else {
-          showBanner(
-            context: context,
-            theMessage: 'This mail has been used',
-            theType: NotificationType.failure,
-          );
-        }
-      },
-    );
-  }
-
-  Future<void> loginUser(
-      {required BuildContext context,
-      required String email,
-      required String password}) async {
-    state = true;
-    final response =
-        await _authRepository.loginUser(email: email, password: password);
     log(email.toString());
     state = false;
     response.fold(
@@ -103,6 +75,77 @@ class AuthController extends StateNotifier<bool> {
             theType: NotificationType.failure,
           );
         }
+      },
+    );
+  }
+
+  // input details
+  Future<void> setupProfileDetails({
+    required BuildContext context,
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String userName,
+  }) async {
+    state = true;
+    String? id = await SharedPrefs().getString(key: 'id');
+
+    final response = await _authRepository.setupProfileDetails(
+      id: id!,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      userName: userName,
+    );
+    log(id.toString());
+    state = false;
+    response.fold(
+      (l) => showBanner(
+        context: context,
+        theMessage: l.message,
+        theType: NotificationType.failure,
+      ),
+      (r) {
+        if (r == 'success') {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => LoginView(),
+            ),
+          );
+        } else {
+          showBanner(
+            context: context,
+            theMessage: 'Error',
+            theType: NotificationType.failure,
+          );
+        }
+      },
+    );
+  }
+
+  void loginUser({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
+    state = true;
+    final response =
+        await _authRepository.loginUser(email: email, password: password);
+    log(email.toString());
+    state = false;
+    response.fold(
+      (l) => showBanner(
+        context: context,
+        theMessage: l.message,
+        theType: NotificationType.failure,
+      ),
+      (r) {
+        _ref.read(userProvider.notifier).update((state) => r);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => DummyHomeView(),
+          ),
+        );
       },
     );
   }

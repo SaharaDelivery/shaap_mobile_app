@@ -1,16 +1,27 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart';
 import 'package:shaap_mobile_app/features/auth/views/login_view.dart';
 import 'package:shaap_mobile_app/features/auth/views/profile_details_form.dart';
 import 'package:shaap_mobile_app/features/auth/views/sign_up_view.dart';
+import 'package:shaap_mobile_app/features/dummy_home_view.dart';
 import 'package:shaap_mobile_app/features/onboarding/views/onboarding_view.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
+import 'package:shaap_mobile_app/utils/shared_prefs.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final String token = await SharedPrefs().getString(key: 'x-auth-token') ?? '';
+
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    ProviderScope(
+      child: MyApp(
+        token: token,
+      ),
     ),
   );
 }
@@ -21,10 +32,15 @@ final navigatorKeyProvider =
 });
 
 class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+  final String token;
+  const MyApp({
+    super.key,
+    required this.token,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
@@ -35,7 +51,9 @@ class MyApp extends ConsumerWidget {
           title: AppTexts.appName,
           debugShowCheckedModeBanner: false,
           theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Outfit'),
-          home: const OnboardingView(),
+          home: token != '' && user != null
+              ? const DummyHomeView()
+              : const OnboardingView(),
         );
       },
     );
