@@ -5,6 +5,7 @@ import 'package:shaap_mobile_app/features/auth/views/login_view.dart';
 import 'package:shaap_mobile_app/features/auth/views/sign_up_view.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
+import 'package:shaap_mobile_app/utils/app_fade_animation.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
@@ -68,36 +69,45 @@ class _OnboardingViewState extends State<OnboardingView> {
                   // onboarding 1
                   Column(
                     children: [
-                      Container(
-                        height: 398.h,
-                        width: width(context),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('onboarding-image-1'.png),
-                            fit: BoxFit.cover,
+                      AppFadeAnimation(
+                        delay: 1.2,
+                        child: Container(
+                          height: 398.h,
+                          width: width(context),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('onboarding-image-1'.png),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
                       39.sbH,
-                      Text(
-                        AppTexts.onboardingTitle1,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Pallete.textBlack,
-                          fontSize: 25.sp,
-                          fontWeight: FontWeight.w500,
+                      AppFadeAnimation(
+                        delay: 1.2,
+                        child: Text(
+                          AppTexts.onboardingTitle1,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Pallete.textBlack,
+                            fontSize: 25.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                       17.sbH,
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 24.w),
-                        child: Text(
-                          AppTexts.onboardingSub1,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Pallete.textGrey,
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w400,
+                        child: AppFadeAnimation(
+                          delay: 1.6,
+                          child: Text(
+                            AppTexts.onboardingSub1,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Pallete.textGrey,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ),
@@ -147,15 +157,18 @@ class _OnboardingViewState extends State<OnboardingView> {
             ),
             Align(
               alignment: Alignment.center,
-              child: SmoothPageIndicator(
-                controller: _controller,
-                count: 2,
-                effect: ExpandingDotsEffect(
-                  expansionFactor: 5,
-                  dotWidth: 8.w,
-                  dotHeight: 8.h,
-                  dotColor: Pallete.dotGreyColor,
-                  activeDotColor: Pallete.yellowColor,
+              child: AppFadeAnimation(
+                delay: 2,
+                child: SmoothPageIndicator(
+                  controller: _controller,
+                  count: 2,
+                  effect: ExpandingDotsEffect(
+                    expansionFactor: 5,
+                    dotWidth: 8.w,
+                    dotHeight: 8.h,
+                    dotColor: Pallete.dotGreyColor,
+                    activeDotColor: Pallete.yellowColor,
+                  ),
                 ),
               ),
             ),
@@ -163,28 +176,31 @@ class _OnboardingViewState extends State<OnboardingView> {
             SizedBox(
               height: 231.h,
               width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  40.sbH,
-                  BButton(
-                    width: 327.w,
-                    onTap: navigateToSignUp,
-                    text: AppTexts.createAnAccount,
-                  ),
-                  20.sbH,
-                  TextButton(
-                    onPressed: navigateToLogin,
-                    child: Text(
-                      AppTexts.loginInstead,
-                      style: TextStyle(
-                        color: Pallete.textGrey,
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w500,
+              child: AppFadeAnimation(
+                delay: 2.4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    40.sbH,
+                    BButton(
+                      width: 327.w,
+                      onTap: navigateToSignUp,
+                      text: AppTexts.createAnAccount,
+                    ),
+                    20.sbH,
+                    TextButton(
+                      onPressed: navigateToLogin,
+                      child: Text(
+                        AppTexts.loginInstead,
+                        style: TextStyle(
+                          color: Pallete.textGrey,
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

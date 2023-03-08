@@ -15,23 +15,26 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+final navigatorKeyProvider =
+    Provider.autoDispose<GlobalKey<NavigatorState>>((ref) {
+  return GlobalKey<NavigatorState>();
+});
+
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: false,
       builder: (context, child) {
         return MaterialApp(
+          navigatorKey: ref.watch(navigatorKeyProvider),
           title: AppTexts.appName,
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-            fontFamily: 'Outfit'
-          ),
+          theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Outfit'),
           home: const OnboardingView(),
         );
       },

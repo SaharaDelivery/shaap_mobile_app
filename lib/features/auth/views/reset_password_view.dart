@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
+import 'package:shaap_mobile_app/utils/app_fade_animation.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
 import 'package:shaap_mobile_app/utils/text_input.dart';
@@ -47,66 +48,78 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
               65.sbH,
 
               // logo,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  TransparentButton(
-                    onTap: () => leavePage(),
-                    height: 32.h,
-                    width: 32.w,
-                    isText: false,
-                    item: Icon(
-                      Icons.arrow_back,
-                      color: Pallete.textBlack,
-                      size: 17.sp,
+              AppFadeAnimation(
+                delay: 1.8,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    TransparentButton(
+                      onTap: () => leavePage(),
+                      height: 32.h,
+                      width: 32.w,
+                      isText: false,
+                      item: Icon(
+                        Icons.arrow_back,
+                        color: Pallete.textBlack,
+                        size: 17.sp,
+                      ),
                     ),
-                  ),
-                  Image.asset(
-                    'shaap'.png,
-                    height: 28.h,
-                  ),
-                  32.sbW,
-                ],
+                    Image.asset(
+                      'shaap'.png,
+                      height: 28.h,
+                    ),
+                    32.sbW,
+                  ],
+                ),
               ),
               24.sbH,
 
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                  AppTexts.resetPassword,
-                  style: TextStyle(
-                    color: Pallete.textBlack,
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w500,
+              AppFadeAnimation(
+                delay: 1.8,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    AppTexts.resetPassword,
+                    style: TextStyle(
+                      color: Pallete.textBlack,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
               32.sbH,
 
               // text inputs
-              TextInputWidget(
-                hintText: AppTexts.emailHint,
-                inputTitle: AppTexts.email,
-                controller: _emailController,
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r'[0-9]')),
-                  FilteringTextInputFormatter.deny(
-                      RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
-                ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '';
-                  }
-                  return null;
-                },
+             AppFadeAnimation(
+              delay: 1.4,
+                child: TextInputWidget(
+                  hintText: AppTexts.emailHint,
+                  inputTitle: AppTexts.email,
+                  controller: _emailController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'[0-9]')),
+                    FilteringTextInputFormatter.deny(
+                        RegExp(r'[!@#$%^&*(),.?":{}|<>]')),
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '';
+                    }
+                    return null;
+                  },
+                ),
               ),
               const Spacer(),
 
               // button
-              BButton(
-                onTap: () {},
-                text: AppTexts.sendLink,
+             AppFadeAnimation(
+              delay: 1.8,
+                child: BButton(
+                  onTap: () {},
+                  text: AppTexts.sendLink,
+                ),
               ),
             ],
           ),
