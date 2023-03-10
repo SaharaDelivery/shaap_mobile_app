@@ -69,6 +69,8 @@ class TransparentButton extends StatelessWidget {
   final Widget? item;
   final String? text;
   final bool isText;
+  final Color? backgroundColor;
+  final Color? textColor;
   const TransparentButton({
     Key? key,
     this.height,
@@ -79,6 +81,8 @@ class TransparentButton extends StatelessWidget {
     this.item,
     this.text,
     this.isText = true,
+    this.backgroundColor,
+    this.textColor,
   }) : super(key: key);
 
   @override
@@ -95,12 +99,12 @@ class TransparentButton extends StatelessWidget {
               color: color ?? Pallete.borderGrey,
             ),
             borderRadius: BorderRadius.all(
-              Radius.circular(8.r),
+              Radius.circular(radius ?? 8.r),
             ),
           ),
           elevation: 0,
           shadowColor: Colors.transparent,
-          backgroundColor: Colors.transparent,
+          backgroundColor: backgroundColor ?? Colors.transparent,
           padding: EdgeInsets.zero,
         ),
         child: Center(
@@ -108,7 +112,8 @@ class TransparentButton extends StatelessWidget {
               ? Text(
                   text ?? '',
                   style: TextStyle(
-                    fontSize: 15.sp,
+                    color: textColor,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 )

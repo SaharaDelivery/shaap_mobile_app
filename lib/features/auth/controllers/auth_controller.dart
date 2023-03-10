@@ -6,6 +6,7 @@ import 'package:shaap_mobile_app/features/auth/models/request_model.dart';
 import 'package:shaap_mobile_app/features/auth/repositories/auth_repository.dart';
 import 'package:shaap_mobile_app/features/auth/views/login_view.dart';
 import 'package:shaap_mobile_app/features/auth/views/profile_details_form.dart';
+import 'package:shaap_mobile_app/features/base_nav_wrapper/views/base_nav_wrapper.dart';
 import 'package:shaap_mobile_app/features/dummy_home_view.dart';
 import 'package:shaap_mobile_app/main.dart';
 import 'package:shaap_mobile_app/models/user_model.dart';
@@ -143,10 +144,31 @@ class AuthController extends StateNotifier<bool> {
         _ref.read(userProvider.notifier).update((state) => r);
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => DummyHomeView(),
+            builder: (context) => const BaseNavWrapper(),
           ),
         );
       },
     );
   }
+
+  // //! get user data
+  // Future<UserModel> getUserData({required BuildContext context}) async {
+  //   late UserModel user;
+  //   state = true;
+  //   final response = await _authRepository.getUserData();
+  //   log(response.toString());
+  //   state = false;
+  //   response.fold(
+  //     (l) => showBanner(
+  //       context: context,
+  //       theMessage: l.message,
+  //       theType: NotificationType.failure,
+  //     ),
+  //     (r) {
+  //       _ref.read(userProvider.notifier).update((state) => r);
+  //       user = r;
+  //     },
+  //   );
+  //   return user;
+  // }
 }

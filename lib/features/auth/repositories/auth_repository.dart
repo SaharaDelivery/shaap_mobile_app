@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
+import 'package:shaap_mobile_app/models/error_model.dart';
 import 'package:shaap_mobile_app/shared/app_urls.dart';
 import 'package:shaap_mobile_app/utils/failure.dart';
 import 'package:shaap_mobile_app/utils/shared_prefs.dart';
@@ -190,7 +191,7 @@ class AuthRepository {
 
       final String token =
           await SharedPrefs().getString(key: 'x-auth-token') ?? '';
-      
+
       log(token);
       log(responseInMap['token'].toString());
       return right(newUser);
@@ -199,4 +200,127 @@ class AuthRepository {
       return left(Failure(e.toString()));
     }
   }
+
+  //! get User data
+  Future<ErrorModel> getUserData() async {
+    ErrorModel error = ErrorModel(
+      error: 'Some unexpected error occurred.',
+      data: null,
+    );
+    try {
+      UserModel userModel = const UserModel(
+        email: '',
+        firstName: '',
+        lastName: '',
+        userName: '',
+        phoneNumber: '',
+        profilePic: '',
+        uid: '',
+        token: '',
+      );
+
+      late UserModel user;
+
+      String? token = await _sharedPrefs.getString(key: 'x-auth-token');
+
+      if (token != null) {
+        http.Request request =
+            http.Request('GET', Uri.parse(AppUrls.getUserData));
+
+        request.headers.addAll({'Authorization': 'Token $token'});
+
+        http.StreamedResponse response = await request.send();
+
+        String responseStream = await response.stream.bytesToString();
+
+        Map<String, dynamic> responseInMap = jsonDecode(responseStream);
+
+        if (response.statusCode == 200) {
+          user = userModel.copyWith(
+            uid: responseInMap['id'].toString(),
+            firstName: responseInMap['first_name'],
+            lastName: responseInMap['last_name'],
+            phoneNumber: responseInMap['phone_number'],
+            email: responseInMap['email'],
+            userName: responseInMap['username'],
+            token: token,
+          );
+          error = ErrorModel(error: null, data: user);
+        } else {}
+
+        // var res = await _client.get(Uri.parse('$host/'), headers: {
+        //   'Content-Type': 'application/json; charset=UTF-8',
+        //   'x-auth-token': token,
+        // });
+        // switch (res.statusCode) {
+        //   case 200:
+        //     final newUser = UserModel.fromJson(
+        //       jsonEncode(
+        //         jsonDecode(res.body)['user'],
+        //       ),
+        //     ).copyWith(token: token);
+        //     error = ErrorModel(error: null, data: newUser);
+        //     _localStorageRepository.setToken(newUser.token);
+        //     break;
+        // }
+      }
+    } catch (e) {
+      error = ErrorModel(
+        error: e.toString(),
+        data: null,
+      );
+    }
+    return error;
+  }
+
+  // //! get user data
+  // Future<UserModel> getUserData() async {
+  //   UserModel userModel = const UserModel(
+  //     email: '',
+  //     firstName: '',
+  //     lastName: '',
+  //     userName: '',
+  //     phoneNumber: '',
+  //     profilePic: '',
+  //     uid: '',
+  //     token: '',
+  //   );
+  //   try {
+  //     late UserModel user;
+
+  //     String? token = await _sharedPrefs.getString(key: 'x-auth-token');
+
+  //     if (token != null) {
+  //       http.Request request =
+  //           http.Request('GET', Uri.parse(AppUrls.getUserData));
+
+  //       request.headers.addAll({'Authorization': 'Token $token'});
+
+  //       http.StreamedResponse response = await request.send();
+
+  //       String responseStream = await response.stream.bytesToString();
+
+  //       Map<String, dynamic> responseInMap = jsonDecode(responseStream);
+  //       // http.Request res = await http.get(Uri.parse(AppUrls.getUserData), headers: {
+  //       //   'Authorization': 'Token $token',
+  //       // });
+  //       if (response.statusCode == 200) {
+  //         user = userModel.copyWith(
+  //           uid: responseInMap['id'].toString(),
+  //           firstName: responseInMap['first_name'],
+  //           lastName: responseInMap['last_name'],
+  //           phoneNumber: responseInMap['phone_number'],
+  //           email: responseInMap['email'],
+  //           userName: responseInMap['username'],
+  //         );
+  //       } else {}
+  //     }
+  //     log(user.email);
+
+  //     return user;
+  //   } catch (e) {
+  //     log(e.toString());
+  //     return userModel;
+  //   }
+  // }
 }

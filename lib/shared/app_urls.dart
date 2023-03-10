@@ -8,4 +8,5 @@ abstract class AppUrls {
       '$_accountBaseUrl/setup/$id/';
   static const String userLogin = '$_accountBaseUrl/login/';
   static const String userLogout = '$_accountBaseUrl/logout/';
+  static const String getUserData = '$_accountBaseUrl/token/';
 }

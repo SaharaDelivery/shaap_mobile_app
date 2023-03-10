@@ -2,6 +2,9 @@ abstract class AppTexts {
   // app name
   static const String appName = 'Shaap';
 
+  // naira
+  static const String naira = '₦';
+
   // onboarding
   static const String createAnAccount = 'Create An Account';
   static const String loginInstead = 'Login Instead';
@@ -51,4 +54,11 @@ abstract class AppTexts {
   static const String pleaseInputMail =
       'Please input your email address to get a link to rest your password';
   static const String sendLink = 'Send link';
+
+  // home
+  static const String deliveringTo = 'Delivering to';
+  static const String search = 'Search for a vendor or a product';
+  
 }
+
+
