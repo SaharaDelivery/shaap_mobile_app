@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart';
 import 'package:shaap_mobile_app/features/home/widgets/item_card_widget.dart';
+import 'package:shaap_mobile_app/features/home/widgets/restaurant_bottom_sheet.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/app_fade_animation.dart';
@@ -206,18 +207,61 @@ class _HomeViewState extends ConsumerState<HomeView> {
             24.sbH,
 
             //! sliding/scaling widget for categories
-            SizedBox(
-              height: 253.h,
-              child: PageView.builder(
-                physics: const AlwaysScrollableScrollPhysics(
-                    parent: BouncingScrollPhysics()),
-                controller: _controller,
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return _buildPageItem(index);
-                },
+            InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
+                  barrierColor: Pallete.blackColor,
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) => Wrap(
+                    children: const [
+                      RestaurantBottomSheet(),
+                    ],
+                  ),
+                );
+              },
+              child: SizedBox(
+                height: 253.h,
+                child: PageView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics()),
+                  controller: _controller,
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return _buildPageItem(index);
+                  },
+                ),
               ),
             ),
+            32.sbH,
+            Padding(
+              padding: 24.padH,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppTexts.featuredRestaurants,
+                    style: TextStyle(
+                      color: Pallete.textBlack,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    AppTexts.seeAll,
+                    style: TextStyle(
+                      color: Pallete.textGrey,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            24.sbH,
+            const ItemCardWidget(isFeatured: true),
+            40.sbH,
           ],
         ),
       ),
@@ -253,7 +297,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
     return Transform(
       transform: matrix,
-      child: const ItemCardWidget(),
+      child: const ItemCardWidget(
+        isFeatured: false,
+      ),
     );
   }
 }

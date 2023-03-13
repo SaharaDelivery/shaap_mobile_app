@@ -58,6 +58,8 @@ abstract class AppTexts {
   // home
   static const String deliveringTo = 'Delivering to';
   static const String search = 'Search for a vendor or a product';
+  static const String featuredRestaurants = 'Featured resturants';
+  static const String seeAll = 'See all';
   
 }
 

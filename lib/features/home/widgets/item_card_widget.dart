@@ -1,20 +1,26 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
 class ItemCardWidget extends StatelessWidget {
-  const ItemCardWidget({super.key});
+  final bool isFeatured;
+  const ItemCardWidget({
+    Key? key,
+    required this.isFeatured,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 253.h,
-      width: 233.w,
+      height: isFeatured == true ? 311.h : 253.h,
+      width: isFeatured == true ? 327.w : 233.w,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         border: Border.all(color: Pallete.dividerGreyColor),
@@ -26,7 +32,7 @@ class ItemCardWidget extends StatelessWidget {
         children: [
           // image
           Container(
-            height: 143.h,
+            height: isFeatured == true ? 201.h : 143.h,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Pallete.blackColor,
