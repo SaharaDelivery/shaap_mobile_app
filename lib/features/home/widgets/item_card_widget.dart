@@ -22,6 +22,7 @@ class ItemCardWidget extends StatelessWidget {
       height: isFeatured == true ? 311.h : 253.h,
       width: isFeatured == true ? 327.w : 233.w,
       padding: EdgeInsets.all(16.w),
+      margin: EdgeInsets.only(right: isFeatured == true ? 0 : 19.w),
       decoration: BoxDecoration(
         border: Border.all(color: Pallete.dividerGreyColor),
         borderRadius: BorderRadius.circular(16.r),

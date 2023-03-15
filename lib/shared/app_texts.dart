@@ -60,6 +60,11 @@ abstract class AppTexts {
   static const String search = 'Search for a vendor or a product';
   static const String featuredRestaurants = 'Featured resturants';
   static const String seeAll = 'See all';
+
+  // restaurants
+  static const String topSellers = 'Top Sellers';
+  static const String main = 'Main';
+
   
 }
 

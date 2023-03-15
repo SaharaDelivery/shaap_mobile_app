@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart';
 import 'package:shaap_mobile_app/features/home/widgets/item_card_widget.dart';
-import 'package:shaap_mobile_app/features/home/widgets/restaurant_bottom_sheet.dart';
+import 'package:shaap_mobile_app/features/restaurants/views/restaurant_bottom_sheet.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/app_fade_animation.dart';
@@ -223,13 +223,18 @@ class _HomeViewState extends ConsumerState<HomeView> {
               },
               child: SizedBox(
                 height: 253.h,
-                child: PageView.builder(
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: 24.padH,
                   physics: const AlwaysScrollableScrollPhysics(
                       parent: BouncingScrollPhysics()),
                   controller: _controller,
                   itemCount: 3,
                   itemBuilder: (context, index) {
-                    return _buildPageItem(index);
+                    return const ItemCardWidget(
+                      isFeatured: false,
+                    );
+                    // return _buildPageItem(index);
                   },
                 ),
               ),
