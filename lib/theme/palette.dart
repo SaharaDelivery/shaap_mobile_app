@@ -25,7 +25,12 @@ class Pallete {
   static const red = Color(0xffD92D20);
   static const lightRed = Color(0xffFEE4E2);
   static const newGrey = Color(0xffF2F4F7);
-  
+  static const completeGreen = Color(0xff039855);
+  static const completeGreenContainer = Color(0xffD1FADF);
+  static const processingOrange = Color(0xffF79009);
+  static const processingOrangeContainer = Color(0xffFEF0C7);
+  static const cancelledRed = Color(0xffB42318);
+  static const cancelledRedContainer = Color(0xffFEE4E2);
 
   // Themes
   static var darkModeAppTheme = ThemeData.dark().copyWith(

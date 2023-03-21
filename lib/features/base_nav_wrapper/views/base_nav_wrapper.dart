@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shaap_mobile_app/features/base_nav_wrapper/widgets/nav_bar_widget.dart';
 import 'package:shaap_mobile_app/features/dummy_home_view.dart';
+import 'package:shaap_mobile_app/features/favourites/views/favourites_view.dart';
 import 'package:shaap_mobile_app/features/home/views/home_view.dart';
+import 'package:shaap_mobile_app/features/orders/views/orders_view.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 
 class BaseNavWrapper extends ConsumerStatefulWidget {
@@ -16,8 +18,8 @@ class BaseNavWrapper extends ConsumerStatefulWidget {
 class _BaseNavWrapperState extends ConsumerState<BaseNavWrapper> {
   List<Widget> pages = const [
     HomeView(),
-    Center(child: Text('favourites view')),
-    Center(child: Text('orders view')),
+    FavouritesView(),
+    OrdersView(),
     Center(child: Text('profile view')),
   ];
 

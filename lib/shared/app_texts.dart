@@ -61,6 +61,11 @@ abstract class AppTexts {
   static const String featuredRestaurants = 'Featured resturants';
   static const String seeAll = 'See all';
 
+  // favourites
+   static const String favorites = 'Favourites';
+   static const String noFavourites = 'No Favourites';
+   static const String youDoNotHaveFaves = 'You Do Not Have Any Favourite Item';
+
   // restaurants
   static const String topSellers = 'Top Sellers';
   static const String main = 'Main';
@@ -79,4 +84,10 @@ abstract class AppTexts {
   static const String onlinepayment = 'Online Payment';
   static const String deliveryFee = 'Delivery Fee';
   static const String cash = 'Cash On Delivery';
+
+  // orders
+  static const String orders = 'Orders';
+  static const String noOrders = 'No Orders';
+  static const String youHaveNoOrder = 'You Have Not Placed Any Order';
+  static const String track = 'Track Order';
 }
