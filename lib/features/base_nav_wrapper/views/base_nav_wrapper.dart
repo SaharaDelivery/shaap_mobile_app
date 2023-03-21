@@ -55,7 +55,7 @@ class _BaseNavWrapperState extends ConsumerState<BaseNavWrapper> {
                 //! Notes
                 NavBarWidget(
                   onTap: () => _page.value = 0,
-                  icon: 'home-filled',
+                  icon: _page.value == 0 ? 'home-filled' : 'home',
                   label: 'Home',
                   iconColor:
                       _page.value == 0 ? Pallete.yellowColor : Pallete.textGrey,
@@ -67,7 +67,7 @@ class _BaseNavWrapperState extends ConsumerState<BaseNavWrapper> {
                 //! Insights
                 NavBarWidget(
                   onTap: () => _page.value = 1,
-                  icon: 'favourite',
+                  icon: _page.value == 1 ? 'favourite-filled' : 'favourite',
                   label: 'Favourite',
                   iconColor:
                       _page.value == 1 ? Pallete.yellowColor : Pallete.textGrey,
@@ -79,7 +79,7 @@ class _BaseNavWrapperState extends ConsumerState<BaseNavWrapper> {
                 //! Home
                 NavBarWidget(
                   onTap: () => _page.value = 2,
-                  icon: 'orders',
+                  icon: _page.value == 2 ? 'orders-filled' : 'orders',
                   label: 'Orders',
                   iconColor:
                       _page.value == 2 ? Pallete.yellowColor : Pallete.textGrey,

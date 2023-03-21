@@ -24,6 +24,8 @@ class Pallete {
   static const grey = Color(0xffEEEEEE);
   static const red = Color(0xffD92D20);
   static const lightRed = Color(0xffFEE4E2);
+  static const newGrey = Color(0xffF2F4F7);
+  
 
   // Themes
   static var darkModeAppTheme = ThemeData.dark().copyWith(

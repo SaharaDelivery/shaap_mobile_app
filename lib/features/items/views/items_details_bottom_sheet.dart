@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:shaap_mobile_app/features/items/views/checkout_bottom_sheet_view.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 
 import 'package:shaap_mobile_app/utils/button.dart';
@@ -386,7 +387,19 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                     child: const SizedBox.shrink(),
                     builder: (context, value, child) {
                       return BButton(
-                        onTap: () {},
+                        onTap: () {
+                          showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            barrierColor: Colors.black.withOpacity(0.25),
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) => Wrap(
+                              children: [
+                                CheckoutBottomSheet(),
+                              ],
+                            ),
+                          );
+                        },
                         color: Pallete.yellowColor,
                         height: 50.h,
                         width: 178.w,

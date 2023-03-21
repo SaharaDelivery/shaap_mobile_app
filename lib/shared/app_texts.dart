@@ -65,7 +65,18 @@ abstract class AppTexts {
   static const String topSellers = 'Top Sellers';
   static const String main = 'Main';
 
-  
+  // checkout
+  static const String deliveryLocation = 'Delivery Location';
+  static const String deliveryTime = 'Delivery time';
+  static const String orderSum = 'Order Summary';
+  static const String edit = 'Edit';
+  static const String addItems = '+ Add Items';
+  static const String promoCode = 'Promo Code';
+  static const String subTotal = 'Subtotal';
+  static const String vat = 'Vat ( 10%)';
+  static const String total = 'Total';
+  static const String paymentMethod = 'Payment Method';
+  static const String onlinepayment = 'Online Payment';
+  static const String deliveryFee = 'Delivery Fee';
+  static const String cash = 'Cash On Delivery';
 }
-
-
