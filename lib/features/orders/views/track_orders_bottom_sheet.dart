@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shaap_mobile_app/features/orders/widgets/delivery_progess_widget.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
@@ -101,7 +102,50 @@ class _TrackOrdersBottomSheetState
                       child: Text('Map'),
                     ),
                   ),
-                  
+                  32.sbH,
+                  //! arrival time
+                  Text(
+                    'Calculating Arrival TIme',
+                    style: TextStyle(
+                      color: Pallete.textBlack,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  5.sbH,
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      text: 'Delivering To ',
+                      style: TextStyle(
+                        color: Pallete.textGrey,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Home',
+                          style: TextStyle(
+                            color: Pallete.yellowColor,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  25.5.sbH,
+
+                  //! the progress widget!
+                  DeliveryProgressWidget(),
+
+                  20.5.sbH,
+                  Container(
+                    height: 91.h,
+                    child: Stack(
+                      children: [],
+                    ),
+                  ),
                 ],
               ),
             ),

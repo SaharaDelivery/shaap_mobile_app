@@ -93,7 +93,7 @@ class _BaseNavWrapperState extends ConsumerState<BaseNavWrapper> {
                 //! Help
                 NavBarWidget(
                   onTap: () => _page.value = 3,
-                  icon: 'profile',
+                  icon: _page.value == 3 ? 'profile-filled' : 'profile',
                   label: 'Profile',
                   iconColor:
                       _page.value == 3 ? Pallete.yellowColor : Pallete.textGrey,
