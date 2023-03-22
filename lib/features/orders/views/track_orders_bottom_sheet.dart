@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shaap_mobile_app/features/orders/widgets/delivery_progess_widget.dart';
+import 'package:shaap_mobile_app/features/orders/widgets/order_cost_details_card.dart';
+import 'package:shaap_mobile_app/features/orders/widgets/status_stacked_card.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
@@ -91,7 +93,7 @@ class _TrackOrdersBottomSheetState
 
                   //! space for the maps
                   Container(
-                    height: 226.h,
+                    height: 200.h,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -140,10 +142,19 @@ class _TrackOrdersBottomSheetState
                   DeliveryProgressWidget(),
 
                   20.5.sbH,
-                  Container(
-                    height: 91.h,
-                    child: Stack(
-                      children: [],
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          //! status stacked0
+                          StatusStackedCard(),
+                  
+                          31.sbH,
+                  
+                          //! order cost details
+                          OrderCostDetailsCard()
+                        ],
+                      ),
                     ),
                   ),
                 ],
