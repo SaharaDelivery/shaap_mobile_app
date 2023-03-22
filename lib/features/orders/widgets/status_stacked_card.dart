@@ -88,7 +88,7 @@ class StatusStackedCard extends ConsumerWidget {
             child: Container(
               height: 66.8.h,
               width: double.infinity,
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.all(14.w),
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(color: Pallete.dividerGreyColor),

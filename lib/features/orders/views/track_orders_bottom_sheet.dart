@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shaap_mobile_app/features/orders/widgets/call_rider_card.dart';
 import 'package:shaap_mobile_app/features/orders/widgets/delivery_progess_widget.dart';
 import 'package:shaap_mobile_app/features/orders/widgets/order_cost_details_card.dart';
 import 'package:shaap_mobile_app/features/orders/widgets/status_stacked_card.dart';
@@ -148,11 +149,17 @@ class _TrackOrdersBottomSheetState
                         children: [
                           //! status stacked0
                           StatusStackedCard(),
-                  
-                          31.sbH,
-                  
+
+                          24.sbH,
+                          //! call rider
+                          CallRiderCard(),
+                          24.sbH,
+
                           //! order cost details
-                          OrderCostDetailsCard()
+                          OrderCostDetailsCard(),
+
+                          //! space
+                          30.sbH,
                         ],
                       ),
                     ),

@@ -32,6 +32,7 @@ class Pallete {
   static const cancelledRed = Color(0xffB42318);
   static const cancelledRedContainer = Color(0xffFEE4E2);
   static const shadowGrey = Color(0xff827878);
+  static const trackOrdersGrey = Color(0xffF9FAFB);
 
   // Themes
   static var darkModeAppTheme = ThemeData.dark().copyWith(
