@@ -11,9 +11,15 @@ import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
 class ItemCardWidget extends StatelessWidget {
   final bool isFeatured;
+  final String name;
+  final String stars;
+  final String image;
   const ItemCardWidget({
     Key? key,
     required this.isFeatured,
+    required this.name,
+    required this.stars,
+    required this.image,
   }) : super(key: key);
 
   @override
@@ -39,7 +45,7 @@ class ItemCardWidget extends StatelessWidget {
               color: Pallete.blackColor,
               borderRadius: BorderRadius.circular(12.r),
               image: DecorationImage(
-                image: AssetImage('food-1'.png),
+                image: NetworkImage(image),
                 fit: BoxFit.cover,
               ),
             ),
@@ -47,7 +53,7 @@ class ItemCardWidget extends StatelessWidget {
 
           //! name - location
           Text(
-            'KFC Nigeria - Ikeja',
+            name,
             style: TextStyle(
               color: Pallete.textBlack,
               fontSize: 14.sp,
@@ -62,7 +68,7 @@ class ItemCardWidget extends StatelessWidget {
               4.sbW,
               RichText(
                 text: TextSpan(
-                  text: '4.5 ',
+                  text: '$stars ',
                   style: TextStyle(
                     color: Pallete.textGrey,
                     fontSize: 12.sp,

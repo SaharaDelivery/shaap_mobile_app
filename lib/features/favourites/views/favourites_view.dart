@@ -68,7 +68,13 @@ class FavouritesView extends ConsumerWidget {
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: EdgeInsets.only(bottom: 25.h),
-                            child: const ItemCardWidget(isFeatured: true),
+                            child: const ItemCardWidget(
+                              isFeatured: true,
+                              image:
+                                  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&auto=format&fit=crop&w=900&q=60',
+                              name: 'Dummy Restaurant',
+                              stars: '4.5',
+                            ),
                           );
                         },
                       ),

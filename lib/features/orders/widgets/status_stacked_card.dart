@@ -1,3 +1,4 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -103,11 +104,17 @@ class StatusStackedCard extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-
-                  // TODO: implement glowing feature
-                  CircleAvatar(
-                    backgroundColor: Colors.red,
-                    radius: 12.w,
+                  AvatarGlow(
+                    glowColor: Pallete.yellowColor,
+                    endRadius: 12.w,
+                    duration: Duration(milliseconds: 2000),
+                    repeat: true,
+                    showTwoGlows: true,
+                    repeatPauseDuration: Duration(milliseconds: 100),
+                    child: CircleAvatar(
+                      backgroundColor: Pallete.yellowColor,
+                      radius: 4.w,
+                    ),
                   ),
                   16.sbW,
                   Column(

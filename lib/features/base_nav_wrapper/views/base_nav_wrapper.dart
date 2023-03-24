@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shaap_mobile_app/features/base_nav_wrapper/widgets/nav_bar_widget.dart';
-import 'package:shaap_mobile_app/features/dummy_home_view.dart';
 import 'package:shaap_mobile_app/features/favourites/views/favourites_view.dart';
 import 'package:shaap_mobile_app/features/home/views/home_view.dart';
 import 'package:shaap_mobile_app/features/orders/views/orders_view.dart';

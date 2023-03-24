@@ -7,11 +7,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart';
 import 'package:shaap_mobile_app/features/home/widgets/item_card_widget.dart';
+import 'package:shaap_mobile_app/features/restaurants/controllers/restaurants_comtroller.dart';
 import 'package:shaap_mobile_app/features/restaurants/views/restaurant_bottom_sheet.dart';
+import 'package:shaap_mobile_app/models/restaurant_model.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/app_fade_animation.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
+import 'package:shaap_mobile_app/utils/error_text.dart';
+import 'package:shaap_mobile_app/utils/loader.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
@@ -37,7 +41,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    //? final user = ref.watch(userProvider)!;
+    //! providers
+    final user = ref.watch(userProvider)!;
+    final allRestaurants = ref.watch(getAllRestaurantsProvider);
+
+    //
     _height = 253.h;
     return Scaffold(
       body: SingleChildScrollView(
@@ -223,19 +231,35 @@ class _HomeViewState extends ConsumerState<HomeView> {
               },
               child: SizedBox(
                 height: 253.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: 24.padH,
-                  physics: const AlwaysScrollableScrollPhysics(
-                      parent: BouncingScrollPhysics()),
-                  controller: _controller,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return const ItemCardWidget(
-                      isFeatured: false,
+                child: allRestaurants.when(
+                  data: (restaurants) {
+                    if (restaurants.isEmpty) {
+                      return const ErrorText(
+                          error: 'There are no restaurants available');
+                    }
+
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: 24.padH,
+                      physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics()),
+                      controller: _controller,
+                      itemCount: restaurants.length,
+                      itemBuilder: (context, index) {
+                        RestaurantModel restaurant = restaurants[index];
+                        return ItemCardWidget(
+                          isFeatured: false,
+                          image: restaurant.cover_photo,
+                          name: restaurant.name,
+                          stars: restaurant.rating,
+                        );
+                        // return _buildPageItem(index);
+                      },
                     );
-                    // return _buildPageItem(index);
                   },
+                  error: (error, stackTrace) =>
+                      ErrorText(error: error.toString()),
+                  loading: () => const Loader(),
                 ),
               ),
             ),
@@ -265,7 +289,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
               ),
             ),
             24.sbH,
-            const ItemCardWidget(isFeatured: true),
+            const ItemCardWidget(
+              isFeatured: true,
+              image:
+                  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&auto=format&fit=crop&w=900&q=60',
+              name: 'Dummy Restaurant',
+              stars: '4.5',
+            ),
             40.sbH,
           ],
         ),
@@ -304,6 +334,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
       transform: matrix,
       child: const ItemCardWidget(
         isFeatured: false,
+        image: '',
+        name: '',
+        stars: '',
       ),
     );
   }
