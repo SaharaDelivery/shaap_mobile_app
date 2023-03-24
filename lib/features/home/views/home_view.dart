@@ -9,6 +9,7 @@ import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart'
 import 'package:shaap_mobile_app/features/home/widgets/item_card_widget.dart';
 import 'package:shaap_mobile_app/features/restaurants/controllers/restaurants_comtroller.dart';
 import 'package:shaap_mobile_app/features/restaurants/views/restaurant_bottom_sheet.dart';
+import 'package:shaap_mobile_app/features/restaurants/views/search_restaurants_view.dart';
 import 'package:shaap_mobile_app/models/restaurant_model.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
@@ -143,28 +144,40 @@ class _HomeViewState extends ConsumerState<HomeView> {
             //! search
             AppFadeAnimation(
               delay: 1.6,
-              child: Container(
-                margin: 24.padH,
-                padding: 18.padH,
-                height: 40.h,
-                width: 327.w,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Pallete.dividerGreyColor),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Row(
-                  children: [
-                    SvgPicture.asset('search'.svg),
-                    10.7.sbW,
-                    Text(
-                      AppTexts.search,
-                      style: TextStyle(
-                        color: Pallete.textGrey,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return const SearchRestaurantsView();
+                    },
+                  ));
+                },
+                child: Hero(
+                  tag: 'search',
+                  child: Container(
+                    margin: 24.padH,
+                    padding: 18.padH,
+                    height: 40.h,
+                    width: 327.w,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Pallete.dividerGreyColor),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
-                  ],
+                    child: Row(
+                      children: [
+                        SvgPicture.asset('search'.svg),
+                        10.7.sbW,
+                        Text(
+                          AppTexts.search,
+                          style: TextStyle(
+                            color: Pallete.textGrey,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
