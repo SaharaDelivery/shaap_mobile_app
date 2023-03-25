@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shaap_mobile_app/models/cuisine_model.dart';
 
 class RestaurantModel {
-  final String id;
+  final int id;
   final String cover_photo;
   final String name;
   final List<CuisineModel> cuisine;
@@ -26,7 +26,7 @@ class RestaurantModel {
   });
 
   RestaurantModel copyWith({
-    String? id,
+    int? id,
     String? cover_photo,
     String? name,
     List<CuisineModel>? cuisine,
@@ -64,7 +64,7 @@ class RestaurantModel {
 
   factory RestaurantModel.fromMap(Map<String, dynamic> map) {
     return RestaurantModel(
-      id: (map["id"] ?? '') as String,
+      id: (map["id"] ?? '') as int,
       cover_photo: (map["cover_photo"] ?? '') as String,
       name: (map["name"] ?? '') as String,
       cuisine: List<CuisineModel>.from(

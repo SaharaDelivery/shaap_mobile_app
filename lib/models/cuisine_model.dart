@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 class CuisineModel {
-  final String id;
+  final int id;
   final String name;
   const CuisineModel({
     required this.id,
@@ -10,7 +10,7 @@ class CuisineModel {
   });
 
   CuisineModel copyWith({
-    String? id,
+    int? id,
     String? name,
   }) {
     return CuisineModel(
@@ -28,7 +28,7 @@ class CuisineModel {
 
   factory CuisineModel.fromMap(Map<String, dynamic> map) {
     return CuisineModel(
-      id: (map["id"] ?? '') as String,
+      id: (map["id"] ?? 0) as int,
       name: (map["name"] ?? '') as String,
     );
   }

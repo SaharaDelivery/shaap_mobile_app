@@ -39,6 +39,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
     _controller.dispose();
     super.dispose();
   }
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {

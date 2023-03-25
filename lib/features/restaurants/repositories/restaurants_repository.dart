@@ -16,21 +16,22 @@ class RestaurantsRepository {
   // get all restaurants
   Future<List<RestaurantModel>> getAllRestaurants() async {
     try {
+      //
       http.Response response =
           await http.get(Uri.parse(AppUrls.getAllRestaurants));
       if (response.statusCode == 200) {
         final List<dynamic> resultRestaurants = jsonDecode(response.body);
         final List<dynamic> resultCuisine = resultRestaurants[0]['cuisine'];
-        log(resultRestaurants.toString());
-        return resultRestaurants.map((e) {
+        // log(resultRestaurants.toString());
+        List<RestaurantModel> restaurants = resultRestaurants.map((e) {
           final List<CuisineModel> cuisines = resultCuisine
               .map((c) => CuisineModel(
-                    id: c['id'].toString(),
+                    id: c['id'],
                     name: c['name'],
                   ))
               .toList();
           return RestaurantModel(
-            id: e['id'].toString(),
+            id: e['id'],
             cover_photo: e['cover_photo'],
             name: e['name'],
             cuisine: cuisines,
@@ -40,6 +41,8 @@ class RestaurantsRepository {
             rating: e['rating'],
           );
         }).toList();
+
+        return restaurants;
       } else {
         throw Exception(response.reasonPhrase);
       }
@@ -49,21 +52,55 @@ class RestaurantsRepository {
     }
   }
 
-  // Map<String, List<CuisineModel>> _createCuisineMap(List resultRestaurants) {
-  //   final cuisineMap = Map<String, List<CuisineModel>>();
-  //   for (final restaurant in resultRestaurants) {
-  //     final List cuisines = restaurant['cuisine'];
-  //     for (final cuisine in cuisines) {
-  //       final id = cuisine['id'].toString();
-  //       final name = cuisine['name'];
-  //       if (!cuisineMap.containsKey(id)) {
-  //         cuisineMap[id] = [];
-  //       }
-  //       cuisineMap[id]!.add(CuisineModel(id: id, name: name));
-  //     }
-  //   }
-  //   return cuisineMap;
-  // }
-// In the getAllRestaurants() method, I first created a map of cuisines using the _createCuisineMap() method. The _createCuisineMap() method iterates over all restaurants and their cuisines and creates a map with cuisine IDs as keys and lists of CuisineModel objects as values.
-// I can then use this map in the map() function to pass the appropriate list of cuisines to each RestaurantModel object.
+  //! get filtered restaurants
+  Future<List<RestaurantModel>> getFilteredRestaurants({
+    required String? name,
+    required List<String> cuisineids,
+    required String? isOpen,
+    required String? rating,
+  }) async {
+    try {
+      final queryParameters = {
+        'name': name ?? '',
+        if (cuisineids.isNotEmpty) 'cuisine': cuisineids.join(','),
+        'is_open': isOpen ?? '',
+        'rating': rating ?? '',
+      };
+      final uri =
+          Uri.https('api.shaap.io', '/restaurant/filter/', queryParameters);
+      http.Response response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> resultRestaurants = jsonDecode(response.body);
+        final List<dynamic> resultCuisine = resultRestaurants[0]['cuisine'];
+        log('list dey!');
+        log(resultRestaurants.toString());
+        List<RestaurantModel> restaurants = resultRestaurants.map((e) {
+          final List<CuisineModel> cuisines = resultCuisine
+              .map((c) => CuisineModel(
+                    id: c['id'],
+                    name: c['name'],
+                  ))
+              .toList();
+          return RestaurantModel(
+            id: e['id'],
+            cover_photo: e['cover_photo'],
+            name: e['name'],
+            cuisine: cuisines,
+            description: e['description'],
+            opening_time: e['opening_time'],
+            closing_time: e['closing_time'],
+            rating: e['rating'],
+          );
+        }).toList();
+
+        return restaurants;
+      } else {
+        throw Exception(response.reasonPhrase);
+      }
+    } on SocketException catch (e) {
+      log(e.toString());
+      throw Exception('No internet connection');
+    }
+  }
 }
