@@ -5,6 +5,7 @@ import 'package:shaap_mobile_app/features/base_nav_wrapper/widgets/nav_bar_widge
 import 'package:shaap_mobile_app/features/favourites/views/favourites_view.dart';
 import 'package:shaap_mobile_app/features/home/views/home_view.dart';
 import 'package:shaap_mobile_app/features/orders/views/orders_view.dart';
+import 'package:shaap_mobile_app/features/profile/views/profile_view.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 
 class BaseNavWrapper extends ConsumerStatefulWidget {
@@ -19,7 +20,7 @@ class _BaseNavWrapperState extends ConsumerState<BaseNavWrapper> {
     HomeView(),
     FavouritesView(),
     OrdersView(),
-    Center(child: Text('profile view')),
+    ProfileView(),
   ];
 
   final ValueNotifier<int> _page = ValueNotifier(0);

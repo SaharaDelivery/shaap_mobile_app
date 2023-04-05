@@ -273,54 +273,5 @@ class AuthRepository {
     return error;
   }
 
-  // //! get user data
-  // Future<UserModel> getUserData() async {
-  //   UserModel userModel = const UserModel(
-  //     email: '',
-  //     firstName: '',
-  //     lastName: '',
-  //     userName: '',
-  //     phoneNumber: '',
-  //     profilePic: '',
-  //     uid: '',
-  //     token: '',
-  //   );
-  //   try {
-  //     late UserModel user;
 
-  //     String? token = await _sharedPrefs.getString(key: 'x-auth-token');
-
-  //     if (token != null) {
-  //       http.Request request =
-  //           http.Request('GET', Uri.parse(AppUrls.getUserData));
-
-  //       request.headers.addAll({'Authorization': 'Token $token'});
-
-  //       http.StreamedResponse response = await request.send();
-
-  //       String responseStream = await response.stream.bytesToString();
-
-  //       Map<String, dynamic> responseInMap = jsonDecode(responseStream);
-  //       // http.Request res = await http.get(Uri.parse(AppUrls.getUserData), headers: {
-  //       //   'Authorization': 'Token $token',
-  //       // });
-  //       if (response.statusCode == 200) {
-  //         user = userModel.copyWith(
-  //           uid: responseInMap['id'].toString(),
-  //           firstName: responseInMap['first_name'],
-  //           lastName: responseInMap['last_name'],
-  //           phoneNumber: responseInMap['phone_number'],
-  //           email: responseInMap['email'],
-  //           userName: responseInMap['username'],
-  //         );
-  //       } else {}
-  //     }
-  //     log(user.email);
-
-  //     return user;
-  //   } catch (e) {
-  //     log(e.toString());
-  //     return userModel;
-  //   }
-  // }
 }

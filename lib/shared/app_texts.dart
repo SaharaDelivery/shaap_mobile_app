@@ -62,9 +62,9 @@ abstract class AppTexts {
   static const String seeAll = 'See all';
 
   // favourites
-   static const String favorites = 'Favourites';
-   static const String noFavourites = 'No Favourites';
-   static const String youDoNotHaveFaves = 'You Do Not Have Any Favourite Item';
+  static const String favorites = 'Favourites';
+  static const String noFavourites = 'No Favourites';
+  static const String youDoNotHaveFaves = 'You Do Not Have Any Favourite Item';
 
   // restaurants
   static const String topSellers = 'Top Sellers';
@@ -90,4 +90,47 @@ abstract class AppTexts {
   static const String noOrders = 'No Orders';
   static const String youHaveNoOrder = 'You Have Not Placed Any Order';
   static const String track = 'Track Order';
+
+  // profile
+  static const String profile = 'Profile';
+  static const String promotions = 'Promotions';
+  static const String about = 'About';
+  static const String profiledetails = 'Profile details';
+  static const String addresses = 'Addresses';
+  static const String support = 'Support';
+
+  // about
+  static const String tandc = 'Terms & Conditions';
+  static const String legalTerms = 'Legal Terms';
+  static const String generalTerms = 'General Terms And Conditions of Use';
+
+  // profile details
+  static const String logout = 'Logout';
+  static const String deleteAcc = 'Delete Account';
+
+  // address details
+  static const String addressDetails = 'Address Details';
+  static const String addNewAddress = 'Add New Address';
+
+  // delete account
+  static const String thisAction =
+      'This action will erase all your data from our database, and you will cease to be a shaap user';
+  static const String noLonger = 'I am no longer using my account';
+  static const String notAvailable = 'Shaap is not available in my city';
+  static const String wantToChange = 'I want to change my phone number';
+  static const String dontUnderstand =
+      'I don\'t understand how to use the service';
+
+  // support
+  static const String faqs = 'Faqs';
+  static const String twitter = 'Twitter';
+  static const String instagram = 'Instagram';
+
+  // faqs
+  static const String faq = 'FAQ';
+  static const String aboutShaap = 'About Shaap';
+  static const String accountData = 'Account Data';
+  static const String appAndFeatures = 'App And Features';
+  static const String usingShaap = 'Using Shaap';
+  static const String orderIssues = 'Order Issues';
 }

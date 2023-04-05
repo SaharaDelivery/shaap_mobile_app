@@ -14,15 +14,18 @@ final getAllRestaurantsProvider = FutureProvider<List<RestaurantModel>>((ref) {
 //! the get filtered restaurants provider
 final getFilteredRestaurantsProvider =
     FutureProvider.family<List<RestaurantModel>, CuisineFilterModel>(
-        (ref, cuisineFilterModel) {
-  final restaurantController = ref.watch(restaurantControllerProvider.notifier);
-  return restaurantController.getFilteredRestaurants(
-    name: cuisineFilterModel.name,
-    cuisineids: cuisineFilterModel.cuisineIds,
-    isOpen: cuisineFilterModel.isOpen,
-    rating: cuisineFilterModel.rating,
-  );
-});
+  (ref, cuisineFilterModel) async {
+    final restaurantController =
+        ref.watch(restaurantControllerProvider.notifier);
+    final restaurants = await restaurantController.getFilteredRestaurants(
+      name: cuisineFilterModel.name,
+      cuisineids: cuisineFilterModel.cuisineIds,
+      isOpen: 'True',
+      rating: cuisineFilterModel.rating,
+    );
+    return restaurants;
+  },
+);
 
 //! the restaurant controller provider
 final restaurantControllerProvider =
