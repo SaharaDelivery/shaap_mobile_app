@@ -23,6 +23,10 @@ class ProfileDetailsView extends ConsumerWidget {
     );
   }
 
+  void logout(BuildContext context, WidgetRef ref) {
+    ref.read(authControllerProvider.notifier).logout(context);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
@@ -101,6 +105,9 @@ class ProfileDetailsView extends ConsumerWidget {
                         switch (e.title) {
                           case AppTexts.deleteAcc:
                             navigateToDeleteAcc(context);
+                            break;
+                          case AppTexts.logout:
+                            logout(context, ref);
                             break;
                         }
                       },

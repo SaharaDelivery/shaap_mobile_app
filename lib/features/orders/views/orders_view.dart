@@ -15,7 +15,7 @@ class OrdersView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<String> orders = [''];
+    List<String> orders = [];
     return SafeArea(
       child: Scaffold(
         body: Container(

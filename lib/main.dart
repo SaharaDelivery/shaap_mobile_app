@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:routemaster/routemaster.dart';
 
 import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart';
 import 'package:shaap_mobile_app/features/auth/repositories/auth_repository.dart';
@@ -14,6 +15,7 @@ import 'package:shaap_mobile_app/features/base_nav_wrapper/views/base_nav_wrappe
 import 'package:shaap_mobile_app/features/onboarding/views/onboarding_view.dart';
 import 'package:shaap_mobile_app/models/error_model.dart';
 import 'package:shaap_mobile_app/models/user_model.dart';
+import 'package:shaap_mobile_app/router.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/utils/shared_prefs.dart';
 
@@ -59,13 +61,23 @@ class _MyAppState extends ConsumerState<MyApp> {
       minTextAdapt: true,
       splitScreenMode: false,
       builder: (context, child) {
-        return MaterialApp(
-            title: AppTexts.appName,
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Outfit'),
-            home: user != null && user.token.isNotEmpty
-                ? const BaseNavWrapper()
-                : const OnboardingView());
+        return MaterialApp.router(
+          title: AppTexts.appName,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Outfit'),
+          routeInformationParser: const RoutemasterParser(),
+          routerDelegate: RoutemasterDelegate(
+            routesBuilder: (context) {
+              if (user != null && user.token.isNotEmpty) {
+                return loggedInRoute;
+              }
+              return loggedOutRoute;
+            },
+          ),
+          // home: user != null && user.token.isNotEmpty
+          //     ? const BaseNavWrapper()
+          //     : const OnboardingView(),
+        );
       },
     );
   }

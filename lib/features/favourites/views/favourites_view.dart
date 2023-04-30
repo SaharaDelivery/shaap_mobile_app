@@ -13,7 +13,7 @@ class FavouritesView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<String> faves = [''];
+    List<String> faves = [];
     return SafeArea(
       child: Scaffold(
         body: Container(

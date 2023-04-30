@@ -3,12 +3,44 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shaap_mobile_app/features/restaurants/models/cuisine_filter_model.dart';
 import 'package:shaap_mobile_app/features/restaurants/repositories/restaurants_repository.dart';
+import 'package:shaap_mobile_app/models/food_model.dart';
+import 'package:shaap_mobile_app/models/menu_model.dart';
 import 'package:shaap_mobile_app/models/restaurant_model.dart';
 
 //! the get all restaurants provider
 final getAllRestaurantsProvider = FutureProvider<List<RestaurantModel>>((ref) {
   final restaurantController = ref.watch(restaurantControllerProvider.notifier);
   return restaurantController.getAllRestaurants();
+});
+
+//! get restaurant details provider
+final getRestaurantDetailsProvider =
+    FutureProvider.family((ref, String restaurantId) {
+  final restaurantController = ref.watch(restaurantControllerProvider.notifier);
+  return restaurantController.getRestaurantDetails(restaurantId: restaurantId);
+});
+
+//! get restaurant details provider
+final getRestaurantBasedOnCuisineProvider =
+    FutureProvider.family((ref, String cuisineName) {
+  final restaurantController = ref.watch(restaurantControllerProvider.notifier);
+  return restaurantController.getRestaurantsBasedOnCuisine(
+      cuisineName: cuisineName);
+});
+
+//! get restaurant menu details provider
+final getRestaurantsMenuItemDetailsProvider =
+    FutureProvider.family((ref, String menuId) {
+  final restaurantController = ref.watch(restaurantControllerProvider.notifier);
+  return restaurantController.getRestaurantsMenuItemDetails(menuId: menuId);
+});
+
+//! get restaurant menu items
+final getRestaurantsMenuItemsProvider =
+    FutureProvider.family((ref, String restaurantId) {
+  final restaurantController = ref.watch(restaurantControllerProvider.notifier);
+  return restaurantController.getRestaurantsMenuItems(
+      restaurantId: restaurantId);
 });
 
 //! the get filtered restaurants provider
@@ -68,7 +100,39 @@ class RestaurantController extends StateNotifier<bool> {
       rating: rating,
     );
   }
+
+  //! get particular restaurant details
+  Future<RestaurantDetailsModel> getRestaurantDetails(
+      {required String restaurantId}) async {
+    return _restaurantRepository.getRestaurantDetails(
+        restaurantId: restaurantId);
+  }
+
+  //! get particular restaurant menu details
+  Future<FoodModel> getRestaurantsMenuItemDetails(
+      {required String menuId}) async {
+    return _restaurantRepository.getRestaurantsMenuItemDetails(menuId: menuId);
+  }
+
+  //! filter restaurants
+  Future<List<RestaurantModel>> getRestaurantsBasedOnCuisine({
+    required String cuisineName,
+  }) async {
+    return _restaurantRepository.getRestaurantsBasedOnCuisine(
+      cuisineName: cuisineName,
+    );
+  }
+
+  //! get restaurant menu
+  Future<List<FoodModel>> getRestaurantsMenuItems(
+      {required String restaurantId}) async {
+    return _restaurantRepository.getRestaurantsMenuItems(
+      restaurantId: restaurantId,
+    );
+  }
 }
+
+
 
 
 // //! the get all restaurants provider

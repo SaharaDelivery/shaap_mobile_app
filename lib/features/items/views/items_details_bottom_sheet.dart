@@ -1,28 +1,25 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:shaap_mobile_app/features/items/views/checkout_bottom_sheet_view.dart';
-import 'package:shaap_mobile_app/shared/app_texts.dart';
 
+import 'package:shaap_mobile_app/features/items/views/checkout_bottom_sheet_view.dart';
+import 'package:shaap_mobile_app/models/food_model.dart';
+import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
 import '../../../theme/palette.dart';
 
 class ItemDetailsBottomSheet extends ConsumerWidget {
-  final String image;
-  final String name;
-  final String description;
-  final double price;
+  final FoodModel food;
   const ItemDetailsBottomSheet({
     super.key,
-    required this.image,
-    required this.name,
-    required this.description,
-    required this.price,
+    required this.food,
   });
 
   @override
@@ -68,7 +65,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  name,
+                  food.name,
                   style: TextStyle(
                     color: Pallete.textBlack,
                     fontSize: 16.sp,
@@ -87,8 +84,31 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: Pallete.grey,
                 borderRadius: BorderRadius.circular(12.r),
-                image: DecorationImage(
-                    image: AssetImage(image), fit: BoxFit.contain),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.r),
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: food.image,
+                  placeholder: (context, url) => Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black12.withOpacity(0.1),
+                          Colors.black12.withOpacity(0.1),
+                          Colors.black26,
+                          Colors.black26,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                  )
+                      .animate(onPlay: (controller) => controller.repeat())
+                      .shimmer(duration: 1200.ms),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
               ),
             ),
             20.sbH,
@@ -97,7 +117,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                name,
+                food.name,
                 style: TextStyle(
                   color: Pallete.textBlack,
                   fontSize: 20.sp,
@@ -111,7 +131,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                '${AppTexts.naira} $price',
+                '${AppTexts.naira} ${food.price}',
                 style: TextStyle(
                   color: Pallete.textBlack,
                   fontSize: 14.sp,
@@ -132,7 +152,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
               ),
               child: Center(
                 child: Text(
-                  description,
+                  food.description,
                   maxLines: 2,
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -150,7 +170,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Choose your $name',
+                'Choose your ${food.name}',
                 style: TextStyle(
                   color: Pallete.textGrey,
                   fontSize: 14.sp,
@@ -404,8 +424,8 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                         height: 50.h,
                         width: 178.w,
                         text: selected.value == 2
-                            ? 'Add ${AppTexts.naira}${price + increase}'
-                            : 'Add ${AppTexts.naira}$price',
+                            ? 'Add ${AppTexts.naira}${food.price} + increase}'
+                            : 'Add ${AppTexts.naira}${food.price}',
                       );
                     }),
               ],

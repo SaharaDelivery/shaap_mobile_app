@@ -15,6 +15,14 @@ abstract class AppUrls {
   //! restaurant
   static const String getAllRestaurants = '$_restaurantBaseUrl/get/all/';
   static const String filterRestaurants = '$_restaurantBaseUrl/filter/';
-  static const String getRestaurantsBasedOnCuisine =
-      '$_restaurantBaseUrl/get/cuisine/<cuisine>/';
+  static String getRestaurantsBasedOnCuisine({required String cuisineName}) =>
+      "$_restaurantBaseUrl/get/cuisine/$cuisineName";
+  static String getRestaurantDetails({required String restaurantId}) =>
+      "$_restaurantBaseUrl/get/$restaurantId";
+
+  //!menu
+  static String getRestaurantsMenuItems({required String restaurantId}) =>
+      "$_restaurantBaseUrl/menu/item/get/all/$restaurantId";
+  static String getRestaurantsMenuItemDetails({required String menuId}) =>
+      "$_restaurantBaseUrl/menu/item/get/$menuId";
 }

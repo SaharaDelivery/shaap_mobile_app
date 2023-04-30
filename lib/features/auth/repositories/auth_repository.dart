@@ -10,6 +10,7 @@ import 'package:shaap_mobile_app/utils/failure.dart';
 import 'package:shaap_mobile_app/utils/shared_prefs.dart';
 import 'package:shaap_mobile_app/utils/type_defs.dart';
 import 'package:shaap_mobile_app/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final authRepositoryProvider = Provider(
   (ref) => AuthRepository(
@@ -201,6 +202,29 @@ class AuthRepository {
     }
   }
 
+  void logout() async {
+    try {
+      String? token = await _sharedPrefs.getString(key: 'x-auth-token');
+      if (token != null) {
+        http.Request request =
+            http.Request('GET', Uri.parse(AppUrls.userLogout));
+
+        request.headers.addAll({'Authorization': 'Token $token'});
+
+        http.StreamedResponse response = await request.send();
+
+        if (response.statusCode == 200) {
+          log('Log out successful');
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+           final res = await preferences.remove('x-auth-token');
+           log(res.toString());
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   //! get User data
   Future<ErrorModel> getUserData() async {
     ErrorModel error = ErrorModel(
@@ -272,6 +296,4 @@ class AuthRepository {
     }
     return error;
   }
-
-
 }

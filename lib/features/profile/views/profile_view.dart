@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart';
 import 'package:shaap_mobile_app/features/profile/views/about_view.dart';
 import 'package:shaap_mobile_app/features/profile/views/addresses_view.dart';
 import 'package:shaap_mobile_app/features/profile/views/profile_details_view.dart';
@@ -49,6 +50,7 @@ class ProfileView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
     return Scaffold(
       body: Container(
         padding: 24.padH,
@@ -93,7 +95,7 @@ class ProfileView extends ConsumerWidget {
             9.sbH,
             //! name
             Text(
-              'long john tony',
+              '${user.firstName} ${user.lastName}',
               style: TextStyle(
                 color: Pallete.textBlack,
                 fontSize: 16.sp,
@@ -103,7 +105,7 @@ class ProfileView extends ConsumerWidget {
             6.sbH,
             //! mail
             Text(
-              'orevbajohnt@gmail.com',
+              user.email,
               style: TextStyle(
                 color: Pallete.textGrey,
                 fontSize: 12.sp,
