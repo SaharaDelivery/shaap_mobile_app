@@ -13,7 +13,9 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'package:shaap_mobile_app/features/home/views/home_view.dart';
 import 'package:shaap_mobile_app/features/home/widgets/choice_widget.dart';
+import 'package:shaap_mobile_app/features/items/views/checkout_bottom_sheet_view.dart';
 import 'package:shaap_mobile_app/features/items/views/items_details_bottom_sheet.dart';
+import 'package:shaap_mobile_app/features/orders/controllers/order_controller.dart';
 import 'package:shaap_mobile_app/features/restaurants/controllers/restaurants_comtroller.dart';
 import 'package:shaap_mobile_app/features/restaurants/widgets/restaurant_dummy_model.dart';
 import 'package:shaap_mobile_app/features/restaurants/widgets/restaurant_list_tile.dart';
@@ -53,6 +55,8 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
   Widget build(BuildContext context) {
     final restaurantDetailsFuture =
         ref.watch(getRestaurantDetailsProvider(widget.restauranstId));
+    final checkForOrdersFuture =
+        ref.watch(checkIfOrderExistsInRestaurantProvider(widget.restauranstId));
     return SizedBox(
       height: height(context),
       width: width(context),
@@ -142,64 +146,125 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     // leave
                                     InkWell(
                                       onTap: () => Navigator.of(context).pop(),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(12.r),
-                                        clipBehavior: Clip.antiAlias,
-                                        child: BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                              sigmaX: 3, sigmaY: 3),
-                                          child: Container(
-                                            height: 32.h,
-                                            width: 32.w,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12.r),
-                                              color:
-                                                  Colors.white.withOpacity(0.2),
-                                            ),
-                                            child: const Center(
-                                              child: Icon(
-                                                Icons.arrow_back,
-                                                color: Pallete.whiteColor,
-                                              ),
-                                            ),
+                                      child: Container(
+                                        height: 50.h,
+                                        width: 50.w,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12.r),
+                                          color: Pallete.yellowColor,
+                                        ),
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.arrow_back,
+                                            color: Pallete.whiteColor,
                                           ),
                                         ),
                                       ),
                                     ),
 
                                     //! search
-                                    InkWell(
-                                      onTap: () {},
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(12.r),
-                                        clipBehavior: Clip.antiAlias,
-                                        child: BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                              sigmaX: 5, sigmaY: 5),
-                                          child: Container(
-                                            height: 32.h,
-                                            width: 32.w,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12.r),
-                                              color:
-                                                  Colors.white.withOpacity(0.4),
-                                            ),
-                                            child: const Center(
-                                              child: Icon(
-                                                PhosphorIcons
-                                                    .magnifyingGlassBold,
-                                                color: Pallete.whiteColor,
-                                              ),
+
+                                    checkForOrdersFuture.when(
+                                      data: (orderId) {
+                                        return InkWell(
+                                          onTap: () {
+                                            if (orderId != 'notfound') {
+                                              showModalBottomSheet(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                barrierColor: Colors.black
+                                                    .withOpacity(0.25),
+                                                isScrollControlled: true,
+                                                context: context,
+                                                builder: (context) => Wrap(
+                                                  children: [
+                                                    CheckoutBottomSheet(
+                                                      orderId: orderId,
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          child: SizedBox(
+                                            height: 60.h,
+                                            width: 60.w,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  height: 50.h,
+                                                  width: 50.w,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.r),
+                                                    color: Pallete.yellowColor,
+                                                  ),
+                                                  child: const Center(
+                                                    child: Icon(
+                                                      PhosphorIcons
+                                                          .shoppingCartBold,
+                                                      color: Pallete.whiteColor,
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                //! check if orders exist
+                                                if (orderId != 'notfound')
+                                                  Positioned(
+                                                    right: 0,
+                                                    top: 0,
+                                                    child: CircleAvatar(
+                                                      backgroundColor:
+                                                          Pallete.whiteColor,
+                                                      radius: 10.w,
+                                                      child: CircleAvatar(
+                                                        backgroundColor:
+                                                            Pallete.red,
+                                                        radius: 8.w,
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
                                             ),
                                           ),
+                                        );
+                                      },
+                                      error: (error, stactrace) {
+                                        log(error.toString());
+                                        // return ErrorText(
+                                        //     error: error.toString());
+                                        return const SizedBox.shrink();
+                                      },
+                                      // loading: () => const Loader(),
+                                      loading: () => SizedBox(
+                                        height: 60.h,
+                                        width: 60.w,
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              height: 50.h,
+                                              width: 50.w,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                                color: Pallete.yellowColor,
+                                              ),
+                                              child: const Center(
+                                                child: Icon(
+                                                  PhosphorIcons
+                                                      .shoppingCartBold,
+                                                  color: Pallete.whiteColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -383,6 +448,12 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
                                     List<FoodModel> dessert = menu
                                         .where((food) => food.menu == 'Dessert')
                                         .toList();
+
+                                    if (menu.isEmpty) {
+                                      return ErrorText(
+                                          error: 'No menu available');
+                                    }
+
                                     return Column(
                                       children: [
                                         //! main course category
@@ -432,6 +503,9 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
                                                                         Wrap(
                                                                   children: [
                                                                     ItemDetailsBottomSheet(
+                                                                      restaurantId:
+                                                                          restaurant
+                                                                              .id,
                                                                       food: mainCourseFoods[
                                                                           index],
                                                                     ),
@@ -496,6 +570,9 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
                                                                         Wrap(
                                                                   children: [
                                                                     ItemDetailsBottomSheet(
+                                                                      restaurantId:
+                                                                          restaurant
+                                                                              .id,
                                                                       food: sideDishes[
                                                                           index],
                                                                     ),
@@ -558,6 +635,9 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
                                                                         Wrap(
                                                                   children: [
                                                                     ItemDetailsBottomSheet(
+                                                                      restaurantId:
+                                                                          restaurant
+                                                                              .id,
                                                                       food: wraps[
                                                                           index],
                                                                     ),
@@ -619,6 +699,9 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
                                                                         Wrap(
                                                                   children: [
                                                                     ItemDetailsBottomSheet(
+                                                                      restaurantId:
+                                                                          restaurant
+                                                                              .id,
                                                                       food: wraps[
                                                                           index],
                                                                     ),
@@ -660,8 +743,7 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
                                                 Column(
                                                   children: List.generate(
                                                       dessert.length, (index) {
-                                                    return dessert
-                                                            .isEmpty
+                                                    return dessert.isEmpty
                                                         ? const SizedBox
                                                             .shrink()
                                                         : RestaurantListTile(
@@ -681,6 +763,9 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
                                                                         Wrap(
                                                                   children: [
                                                                     ItemDetailsBottomSheet(
+                                                                      restaurantId:
+                                                                          restaurant
+                                                                              .id,
                                                                       food: wraps[
                                                                           index],
                                                                     ),
@@ -688,7 +773,8 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
                                                                 ),
                                                               );
                                                             },
-                                                            food: dessert[index],
+                                                            food:
+                                                                dessert[index],
                                                           );
                                                   }),
                                                 ),

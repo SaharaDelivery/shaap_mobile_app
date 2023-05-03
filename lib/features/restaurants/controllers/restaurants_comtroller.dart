@@ -20,7 +20,7 @@ final getRestaurantDetailsProvider =
   return restaurantController.getRestaurantDetails(restaurantId: restaurantId);
 });
 
-//! get restaurant details provider
+//! get restaurant based on cuisine provider
 final getRestaurantBasedOnCuisineProvider =
     FutureProvider.family((ref, String cuisineName) {
   final restaurantController = ref.watch(restaurantControllerProvider.notifier);

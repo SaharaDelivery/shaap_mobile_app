@@ -3,6 +3,7 @@ abstract class AppUrls {
   static const String _baseUrl = "https://api.shaap.io";
   static const String _accountBaseUrl = "$_baseUrl/user/account";
   static const String _restaurantBaseUrl = '$_baseUrl/restaurant';
+  static const String _ordersBaseUrl = "$_baseUrl/user/order";
 
   //! auth
   static const String userSignUp = '$_accountBaseUrl/register/';
@@ -25,4 +26,13 @@ abstract class AppUrls {
       "$_restaurantBaseUrl/menu/item/get/all/$restaurantId";
   static String getRestaurantsMenuItemDetails({required String menuId}) =>
       "$_restaurantBaseUrl/menu/item/get/$menuId";
+
+  //! orders
+  static const String createAnOrder = '$_ordersBaseUrl/place/';
+  static String checkIfOrderExistsInRestaurant(
+          {required String restaurantId}) =>
+      '$_ordersBaseUrl/exists/$restaurantId';
+  static String getOrderDetails({required String orderId}) =>
+      '$_ordersBaseUrl/details/$orderId';
+  static const String getOrderHistory = '$_ordersBaseUrl/history/';
 }

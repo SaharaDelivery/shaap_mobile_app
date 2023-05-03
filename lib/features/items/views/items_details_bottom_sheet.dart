@@ -1,13 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:routemaster/routemaster.dart';
-
-import 'package:shaap_mobile_app/features/items/views/checkout_bottom_sheet_view.dart';
+import 'package:shaap_mobile_app/features/orders/controllers/order_controller.dart';
 import 'package:shaap_mobile_app/models/food_model.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
@@ -16,11 +13,27 @@ import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 import '../../../theme/palette.dart';
 
 class ItemDetailsBottomSheet extends ConsumerWidget {
+  final int restaurantId;
   final FoodModel food;
   const ItemDetailsBottomSheet({
     super.key,
+    required this.restaurantId,
     required this.food,
   });
+
+  void createOrder({
+    required WidgetRef ref,
+    required BuildContext context,
+    required int menuItemId,
+    required int quantity,
+  }) {
+    ref.read(orderControllerProvider.notifier).createAnOrder(
+          context: context,
+          restaurantId: restaurantId,
+          menuItemId: menuItemId,
+          quantity: quantity,
+        );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -408,17 +421,23 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                     builder: (context, value, child) {
                       return BButton(
                         onTap: () {
-                          showModalBottomSheet(
-                            backgroundColor: Colors.transparent,
-                            barrierColor: Colors.black.withOpacity(0.25),
-                            isScrollControlled: true,
+                          createOrder(
+                            ref: ref,
                             context: context,
-                            builder: (context) => Wrap(
-                              children: [
-                                CheckoutBottomSheet(),
-                              ],
-                            ),
+                            menuItemId: food.id,
+                            quantity: 1,
                           );
+                          // showModalBottomSheet(
+                          //   backgroundColor: Colors.transparent,
+                          //   barrierColor: Colors.black.withOpacity(0.25),
+                          //   isScrollControlled: true,
+                          //   context: context,
+                          //   builder: (context) => Wrap(
+                          //     children: [
+                          //       CheckoutBottomSheet(),
+                          //     ],
+                          //   ),
+                          // );
                         },
                         color: Pallete.yellowColor,
                         height: 50.h,

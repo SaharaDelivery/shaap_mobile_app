@@ -18,8 +18,10 @@ import 'package:shaap_mobile_app/utils/app_fade_animation.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
 import 'package:shaap_mobile_app/utils/error_text.dart';
 import 'package:shaap_mobile_app/utils/loader.dart';
+import 'package:shaap_mobile_app/utils/shared_prefs.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -160,7 +162,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
               AppFadeAnimation(
                 delay: 1.6,
                 child: InkWell(
-                  onTap: () {
+                  onTap: () async {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) {
                         return const SearchRestaurantsView();
