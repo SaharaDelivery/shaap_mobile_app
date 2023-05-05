@@ -377,52 +377,52 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
                             endIndent: 11.w,
                           ),
                           16.sbH,
-                          SizedBox(
-                            height: 32.h,
-                            //! TODO:
-                            child: ValueListenableBuilder(
-                                valueListenable: selectedCategoryIndex,
-                                child: const SizedBox.shrink(),
-                                builder: (context, value, child) {
-                                  return ListView.builder(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(
-                                            parent: BouncingScrollPhysics()),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: restCategories.length,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 24.w),
-                                    itemBuilder: (context, index) {
-                                      return ChoiceWidget(
-                                        onTap: () async {
-                                          selectedCategoryIndex.value = index;
-                                          _scrollToIndex(index);
-                                        },
-                                        borderColor:
-                                            selectedCategoryIndex.value == index
-                                                ? Pallete.yellowColor
-                                                : Pallete.dividerGreyColor,
-                                        backgroundColor:
-                                            selectedCategoryIndex.value == index
-                                                ? Pallete.yellowColor
-                                                : Colors.transparent,
-                                        textColor:
-                                            selectedCategoryIndex.value == index
-                                                ? Pallete.whiteColor
-                                                : Pallete.textGrey,
-                                        text: restCategories[index],
-                                      );
-                                    },
-                                  );
-                                }),
-                          ),
-                          16.sbH,
-                          Divider(
-                            color: Pallete.dividerGreyColor,
-                            thickness: 2,
-                            endIndent: 11.w,
-                          ),
-                          16.sbH,
+                          // SizedBox(
+                          //   height: 32.h,
+                          //   //! TODO:
+                          //   child: ValueListenableBuilder(
+                          //       valueListenable: selectedCategoryIndex,
+                          //       child: const SizedBox.shrink(),
+                          //       builder: (context, value, child) {
+                          //         return ListView.builder(
+                          //           physics:
+                          //               const AlwaysScrollableScrollPhysics(
+                          //                   parent: BouncingScrollPhysics()),
+                          //           scrollDirection: Axis.horizontal,
+                          //           itemCount: restCategories.length,
+                          //           padding:
+                          //               EdgeInsets.symmetric(horizontal: 24.w),
+                          //           itemBuilder: (context, index) {
+                          //             return ChoiceWidget(
+                          //               onTap: () async {
+                          //                 selectedCategoryIndex.value = index;
+                          //                 _scrollToIndex(index);
+                          //               },
+                          //               borderColor:
+                          //                   selectedCategoryIndex.value == index
+                          //                       ? Pallete.yellowColor
+                          //                       : Pallete.dividerGreyColor,
+                          //               backgroundColor:
+                          //                   selectedCategoryIndex.value == index
+                          //                       ? Pallete.yellowColor
+                          //                       : Colors.transparent,
+                          //               textColor:
+                          //                   selectedCategoryIndex.value == index
+                          //                       ? Pallete.whiteColor
+                          //                       : Pallete.textGrey,
+                          //               text: restCategories[index],
+                          //             );
+                          //           },
+                          //         );
+                          //       }),
+                          // ),
+                          // 16.sbH,
+                          // Divider(
+                          //   color: Pallete.dividerGreyColor,
+                          //   thickness: 2,
+                          //   endIndent: 11.w,
+                          // ),
+                          // 16.sbH,
                           SizedBox(
                             // height: 516.h,
                             child: ref

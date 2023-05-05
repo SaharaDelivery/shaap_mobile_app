@@ -2,11 +2,13 @@
 import 'dart:convert';
 
 class OrderItemModel {
+  final int? cartItemId;
   final String name;
   final String price;
   final String imageUrl;
   final int quantity;
   const OrderItemModel({
+    this.cartItemId,
     required this.name,
     required this.price,
     required this.imageUrl,
@@ -14,12 +16,14 @@ class OrderItemModel {
   });
 
   OrderItemModel copyWith({
+    int? cartItemId,
     String? name,
     String? price,
     String? imageUrl,
     int? quantity,
   }) {
     return OrderItemModel(
+      cartItemId: cartItemId ?? this.cartItemId,
       name: name ?? this.name,
       price: price ?? this.price,
       imageUrl: imageUrl ?? this.imageUrl,
@@ -29,6 +33,7 @@ class OrderItemModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'cartItemId': cartItemId,
       'name': name,
       'price': price,
       'imageUrl': imageUrl,
@@ -38,6 +43,7 @@ class OrderItemModel {
 
   factory OrderItemModel.fromMap(Map<String, dynamic> map) {
     return OrderItemModel(
+      cartItemId: map['cartItemId'] != null ? map["cartItemId"] : null,
       name: (map["name"] ?? '') as String,
       price: (map["price"] ?? '') as String,
       imageUrl: (map["imageUrl"] ?? '') as String,
@@ -52,26 +58,27 @@ class OrderItemModel {
 
   @override
   String toString() {
-    return 'OrderItemModel(name: $name, price: $price, imageUrl: $imageUrl, quantity: $quantity)';
+    return 'OrderItemModel(cartItemId: $cartItemId, name: $name, price: $price, imageUrl: $imageUrl, quantity: $quantity)';
   }
 
   @override
   bool operator ==(covariant OrderItemModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.name == name &&
-      other.price == price &&
-      other.imageUrl == imageUrl &&
-      other.quantity == quantity;
+
+    return other.cartItemId == cartItemId &&
+        other.name == name &&
+        other.price == price &&
+        other.imageUrl == imageUrl &&
+        other.quantity == quantity;
   }
 
   @override
   int get hashCode {
-    return name.hashCode ^
-      price.hashCode ^
-      imageUrl.hashCode ^
-      quantity.hashCode;
+    return cartItemId.hashCode ^
+        name.hashCode ^
+        price.hashCode ^
+        imageUrl.hashCode ^
+        quantity.hashCode;
   }
 }
 

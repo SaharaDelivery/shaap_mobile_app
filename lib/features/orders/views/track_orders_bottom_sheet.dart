@@ -1,17 +1,24 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:shaap_mobile_app/features/orders/widgets/call_rider_card.dart';
 import 'package:shaap_mobile_app/features/orders/widgets/delivery_progess_widget.dart';
 import 'package:shaap_mobile_app/features/orders/widgets/order_cost_details_card.dart';
 import 'package:shaap_mobile_app/features/orders/widgets/status_stacked_card.dart';
+import 'package:shaap_mobile_app/models/order_model.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
 class TrackOrdersBottomSheet extends ConsumerStatefulWidget {
-  const TrackOrdersBottomSheet({super.key});
+  final OrderModel order;
+  const TrackOrdersBottomSheet({
+    super.key,
+    required this.order,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -156,7 +163,9 @@ class _TrackOrdersBottomSheetState
                           24.sbH,
 
                           //! order cost details
-                          OrderCostDetailsCard(),
+                          OrderCostDetailsCard(
+                            order: widget.order,
+                          ),
 
                           //! space
                           30.sbH,

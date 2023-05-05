@@ -175,32 +175,33 @@ class OrderRepository {
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
+
         final List<dynamic> orderItemsResultList =
             responseData[0]['order_items'];
-        final List<OrderItemModel> orderItems = orderItemsResultList
-            .map((item) => OrderItemModel(
-                  name: item['menu_item']['name'],
-                  price: item['menu_item']['price'],
-                  imageUrl: item['menu_item']['image'],
-                  quantity: item['quantity'],
-                ))
-            .toList();
 
-        List<OrderModel> orders = responseData
-            .map(
-              (e) => OrderModel(
-                order_id: e['order_id'],
-                restaurant: Restaurant(
-                  id: e['restaurant']['id'],
-                  name: e['restaurant']['name'],
-                ),
-                status: '',
-                total_price: e['total_price'],
-                orderItem: orderItems,
-                date_created: e['date_created'],
+        List<OrderModel> orders = responseData.map(
+          (e) {
+            final List<OrderItemModel> orderItems = orderItemsResultList
+                .map((item) => OrderItemModel(
+                      name: item['menu_item']['name'],
+                      price: item['menu_item']['price'],
+                      imageUrl: '',
+                      quantity: item['quantity'],
+                    ))
+                .toList();
+            return OrderModel(
+              order_id: e['order_id'],
+              restaurant: Restaurant(
+                id: e['restaurant']['id'],
+                name: e['restaurant']['name'],
               ),
-            )
-            .toList();
+              status: '',
+              total_price: e['total_price'],
+              orderItem: orderItems,
+              date_created: e['date_created'],
+            );
+          },
+        ).toList();
 
         return orders;
       } else {
@@ -209,6 +210,145 @@ class OrderRepository {
     } on SocketException catch (e) {
       log(e.toString());
       throw Exception('No internet connection');
+    }
+  }
+
+  //! increase item in cart/ add item to existing cart
+  FutureVoid increaseItemInCartAddItemToExistingCart({
+    required String orderId,
+    required int menuItemId,
+    required int quantity,
+  }) async {
+    try {
+      String? token = await _sharedPrefs.getString(key: 'x-auth-token');
+
+      http.Request request =
+          http.Request('POST', Uri.parse(AppUrls.increaseCartItemQuantityAddItemsToCart));
+
+      request.headers.addAll({
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": "Token $token",
+      });
+
+      request.body = jsonEncode({
+        "order": orderId,
+        "menu_item": menuItemId,
+        "quantity": quantity,
+      });
+
+      http.StreamedResponse response = await request.send();
+
+      log(response.statusCode.toString());
+
+      if (response.statusCode == 200) {
+        return right(null);
+      } else {
+        return left(Failure('error'));
+      }
+    } on SocketException catch (e) {
+      log(e.toString());
+      throw Exception('No internet connection');
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  //! get all cart items
+  Future<List<OrderItemModel>> getAllCartItems({
+    required String orderId,
+  }) async {
+    try {
+      String? token = await _sharedPrefs.getString(key: 'x-auth-token');
+
+      http.Response response = await http.get(
+          Uri.parse(
+            AppUrls.getAllCartItems(orderId: orderId),
+          ),
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+            "Authorization": "Token $token",
+          });
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        final List<OrderItemModel> orderItems = responseData
+            .map((item) => OrderItemModel(
+                  cartItemId: item['id'],
+                  name: item['menu_item']['name'],
+                  price: item['menu_item']['price'],
+                  // imageUrl: item['menu_item']['image'],
+                  imageUrl: '',
+                  quantity: item['quantity'],
+                ))
+            .toList();
+
+        return orderItems;
+      } else {
+        throw Exception(response.reasonPhrase);
+      }
+    } on SocketException catch (e) {
+      log(e.toString());
+      throw Exception(e.toString());
+    }
+  }
+
+  //! remove item from cart
+  FutureVoid removeItemFromCart({
+    required String cartItemId,
+  }) async {
+    try {
+      String? token = await _sharedPrefs.getString(key: 'x-auth-token');
+
+      http.Response response = await http.delete(
+          Uri.parse(
+            AppUrls.removeItemFromCart(cartItemId: cartItemId),
+          ),
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+            "Authorization": "Token $token",
+          });
+
+      if (response.statusCode == 200) {
+        return right(null);
+      } else {
+        return left(Failure('error'));
+      }
+    } on SocketException catch (e) {
+      log(e.toString());
+      throw Exception('No internet connection');
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  // reduce item in cart
+  FutureVoid reduceItemInCart({
+    required String cartItemId,
+  }) async {
+    try {
+      String? token = await _sharedPrefs.getString(key: 'x-auth-token');
+
+      http.Response response = await http.delete(
+          Uri.parse(
+            AppUrls.reduceItemFromCart(cartItemId: cartItemId),
+          ),
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+            "Authorization": "Token $token",
+          });
+
+      log(response.reasonPhrase.toString());
+
+      if (response.statusCode == 200) {
+        return right(null);
+      } else {
+        return left(Failure('error'));
+      }
+    } on SocketException catch (e) {
+      log(e.toString());
+      throw Exception('No internet connection');
+    } catch (e) {
+      return left(Failure(e.toString()));
     }
   }
 }

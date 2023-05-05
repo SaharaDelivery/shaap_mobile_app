@@ -4,6 +4,7 @@ abstract class AppUrls {
   static const String _accountBaseUrl = "$_baseUrl/user/account";
   static const String _restaurantBaseUrl = '$_baseUrl/restaurant';
   static const String _ordersBaseUrl = "$_baseUrl/user/order";
+  static const String _cartBaseUrl = "$_baseUrl/user/order/item";
 
   //! auth
   static const String userSignUp = '$_accountBaseUrl/register/';
@@ -35,4 +36,14 @@ abstract class AppUrls {
   static String getOrderDetails({required String orderId}) =>
       '$_ordersBaseUrl/details/$orderId';
   static const String getOrderHistory = '$_ordersBaseUrl/history/';
+
+  //! cart
+  static const String increaseCartItemQuantityAddItemsToCart =
+      '$_cartBaseUrl/add/';
+  static String getAllCartItems({required String orderId}) =>
+      '$_cartBaseUrl/get/all/$orderId';
+  static String removeItemFromCart({required String cartItemId}) =>
+      '$_cartBaseUrl/delete/$cartItemId/';
+  static String reduceItemFromCart({required String cartItemId}) =>
+      '$_cartBaseUrl/reduce/$cartItemId/';
 }

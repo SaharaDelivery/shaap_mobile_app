@@ -1,14 +1,24 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:shaap_mobile_app/models/order_model.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
+import 'package:shaap_mobile_app/utils/type_defs.dart';
+import 'package:shaap_mobile_app/utils/utils.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
 class OrderCostDetailsCard extends ConsumerWidget {
-  const OrderCostDetailsCard({super.key});
+  final OrderModel order;
+  const OrderCostDetailsCard({
+    super.key,
+    required this.order,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,12 +48,17 @@ class OrderCostDetailsCard extends ConsumerWidget {
                     ),
                   ),
                   4.sbH,
-                  Text(
-                    '#23ef1456a',
-                    style: TextStyle(
-                      color: Pallete.textGrey,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
+                  SizedBox(
+                    width: 250.w,
+                    child: Text(
+                      order.order_id,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Pallete.textGrey,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ],
@@ -51,7 +66,15 @@ class OrderCostDetailsCard extends ConsumerWidget {
 
               //! copy icon
               InkWell(
-                onTap: () {},
+                onTap: () async {
+                  await Clipboard.setData(ClipboardData(text: order.order_id))
+                      .then(
+                    (value) => showSnackBar(
+                      context,
+                      'Your order ID has been copied to your clipboard',
+                    ),
+                  );
+                },
                 child: SvgPicture.asset('copy'.svg),
               ),
             ],

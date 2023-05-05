@@ -54,35 +54,44 @@ class OrdersTile extends ConsumerWidget {
             10.sbW,
 
             //! details
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  restaurantName,
-                  style: TextStyle(
-                    color: Pallete.textBlack,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
+            SizedBox(
+              width: 170.w,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    restaurantName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Pallete.textBlack,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                Text(
-                  'Order Id - $orderID',
-                  style: TextStyle(
-                    color: Pallete.textGrey,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
+                  Text(
+                    'Order Id - $orderID',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Pallete.textGrey,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-                Text(
-                  details,
-                  style: TextStyle(
-                    color: Pallete.textBlack,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
+                  Text(
+                    details,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Pallete.textBlack,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const Spacer(),
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -5,12 +7,71 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:shaap_mobile_app/features/orders/controllers/order_controller.dart';
+import 'package:shaap_mobile_app/features/restaurants/controllers/restaurants_comtroller.dart';
 import 'package:shaap_mobile_app/models/food_model.dart';
+import 'package:shaap_mobile_app/models/order_item_model.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
+import 'package:shaap_mobile_app/utils/app_fade_animation.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
+import 'package:shaap_mobile_app/utils/error_text.dart';
+import 'package:shaap_mobile_app/utils/loader.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
 import '../../../theme/palette.dart';
+
+// class ItemDetailsBottomSheet extends ConsumerStatefulWidget {
+//   final int restaurantId;
+//   final FoodModel food;
+//   const ItemDetailsBottomSheet({
+//     super.key,
+//     required this.restaurantId,
+//     required this.food,
+//   });
+
+//   @override
+//   ConsumerState<ConsumerStatefulWidget> createState() =>
+//       _ItemDetailsBottomSheetState();
+// }
+
+// class _ItemDetailsBottomSheetState
+//     extends ConsumerState<ItemDetailsBottomSheet> {
+
+//   void createOrder({
+//     required WidgetRef ref,
+//     required BuildContext context,
+//     required int menuItemId,
+//     required int quantity,
+//   }) {
+//     ref.read(orderControllerProvider.notifier).createAnOrder(
+//           context: context,
+//           restaurantId: restaurantId,
+//           menuItemId: menuItemId,
+//           quantity: quantity,
+//         );
+//   }
+
+//   void increaseItemInCart({
+//     required WidgetRef ref,
+//     required BuildContext context,
+//     required String orderId,
+//     required int menuItemId,
+//     required int quantity,
+//   }) {
+//     ref
+//         .read(orderControllerProvider.notifier)
+//         .increaseItemInCartAddItemToExistingCart(
+//           context: context,
+//           orderId: orderId,
+//           menuItemId: menuItemId,
+//           quantity: quantity,
+//         );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }
 
 class ItemDetailsBottomSheet extends ConsumerWidget {
   final int restaurantId;
@@ -35,10 +96,44 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
         );
   }
 
+  void increaseItemInCart({
+    required WidgetRef ref,
+    required BuildContext context,
+    required String orderId,
+    required int menuItemId,
+    required int quantity,
+  }) {
+    ref
+        .read(orderControllerProvider.notifier)
+        .increaseItemInCartAddItemToExistingCart(
+          context: context,
+          orderId: orderId,
+          menuItemId: menuItemId,
+          quantity: quantity,
+        );
+  }
+
+  void reduceItemQuantityInCart({
+    required WidgetRef ref,
+    required BuildContext context,
+    required String cartItemId,
+  }) {
+    ref.read(orderControllerProvider.notifier).reduceItemInCart(
+          context: context,
+          cartItemId: cartItemId,
+        );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ValueNotifier<int> selected = ValueNotifier(0);
+    final ValueNotifier<int> quantity = ValueNotifier(0);
+    final ValueNotifier<int> addCount = ValueNotifier(0);
+    int? cartItemId;
     final double increase = 1200;
+
+    final checkForOrdersFuture = ref
+        .watch(checkIfOrderExistsInRestaurantProvider(restaurantId.toString()));
 
     // double priceInDouble = double.parse(price);
 
@@ -289,7 +384,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                               ),
                               16.sbW,
                               Text(
-                                'Zinger Burger',
+                                food.name,
                                 style: TextStyle(
                                   color: Pallete.textBlack,
                                   fontSize: 14.sp,
@@ -337,7 +432,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: 'Zinger Burger',
+                                      text: food.name,
                                       style: TextStyle(
                                         color: Pallete.textBlack,
                                         fontSize: 14.sp,
@@ -369,84 +464,234 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //! add/remove
-                Container(
-                  height: 50.h,
-                  width: 118.w,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: Pallete.dividerGreyColor)),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        TransparentButton(
-                          onTap: () {},
-                          height: 25.h,
-                          width: 25.w,
-                          isText: false,
-                          item: Icon(
-                            PhosphorIcons.minusBold,
-                            color: Colors.black,
-                            size: 13.sp,
-                          ),
-                        ),
-                        Text(
-                          '1',
-                          style: TextStyle(
-                            color: Pallete.blackColor,
-                            fontSize: 17.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        TransparentButton(
-                          onTap: () {},
-                          height: 25.h,
-                          width: 25.w,
-                          isText: false,
-                          item: Icon(
-                            PhosphorIcons.plusBold,
-                            color: Colors.black,
-                            size: 13.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                checkForOrdersFuture.when(
+                  data: (orderId) {
+                    if (orderId != 'notfound') {
+                      return ref.watch(getAllCartItemsProvider(orderId)).when(
+                            data: (cartList) {
+                              bool exists = false;
+                              // log(cartList.toString());
+
+                              for (OrderItemModel item in cartList) {
+                                if (item.name == food.name) {
+                                  quantity.value = item.quantity;
+                                  cartItemId = item.cartItemId!;
+                                  exists = true;
+                                  break;
+                                }
+                              }
+
+                              if (exists) {
+                                return ValueListenableBuilder(
+                                  valueListenable: quantity,
+                                  builder: (context, value, child) {
+                                    return AppFadeAnimation(
+                                      delay: 0.5,
+                                      child: Container(
+                                        height: 65.h,
+                                        width: 180.w,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8.r),
+                                            border: Border.all(
+                                                color:
+                                                    Pallete.dividerGreyColor)),
+                                        child: Center(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              TransparentButton(
+                                                onTap: () {
+                                                  refreshProvider(
+                                                      ref,
+                                                      getAllCartItemsProvider(
+                                                          orderId));
+                                                  if (quantity.value > 0) {
+                                                    reduceItemQuantityInCart(
+                                                      ref: ref,
+                                                      context: context,
+                                                      cartItemId: cartItemId!
+                                                          .toString(),
+                                                    );
+                                                    quantity.value--;
+                                                    addCount.value--;
+                                                  }
+                                                },
+                                                height: 40.h,
+                                                width: 40.w,
+                                                isText: false,
+                                                item: Icon(
+                                                  PhosphorIcons.minusBold,
+                                                  color: Colors.black,
+                                                  size: 16.sp,
+                                                ),
+                                              ),
+                                              Text(
+                                                quantity.value.toString(),
+                                                style: TextStyle(
+                                                  color: Pallete.blackColor,
+                                                  fontSize: 19.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              TransparentButton(
+                                                onTap: () {
+                                                  quantity.value++;
+                                                  addCount.value++;
+                                                  log(addCount.value
+                                                      .toString());
+                                                  increaseItemInCart(
+                                                    ref: ref,
+                                                    context: context,
+                                                    orderId: orderId,
+                                                    menuItemId: food.id,
+                                                    quantity: 1,
+                                                  );
+                                                },
+                                                height: 40.h,
+                                                width: 40.w,
+                                                isText: false,
+                                                item: Icon(
+                                                  PhosphorIcons.plusBold,
+                                                  color: Colors.black,
+                                                  size: 16.sp,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ).animate().fadeIn(),
+                                    );
+                                  },
+                                  child: const SizedBox.shrink(),
+                                );
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
+                            error: (error, stactrace) {
+                              log(error.toString());
+                              return ErrorText(error: error.toString());
+                            },
+                            loading: () => const SizedBox.shrink(),
+                            // loading: () => const Loader(),
+                          );
+                    }
+
+                    return const SizedBox.shrink();
+                  },
+                  error: (error, stactrace) {
+                    log(error.toString());
+                    return ErrorText(error: error.toString());
+                  },
+                  loading: () => const Loader(),
                 ),
 
                 //! add
-                ValueListenableBuilder(
-                    valueListenable: selected,
-                    child: const SizedBox.shrink(),
-                    builder: (context, value, child) {
-                      return BButton(
-                        onTap: () {
-                          createOrder(
-                            ref: ref,
-                            context: context,
-                            menuItemId: food.id,
-                            quantity: 1,
-                          );
-                          // showModalBottomSheet(
-                          //   backgroundColor: Colors.transparent,
-                          //   barrierColor: Colors.black.withOpacity(0.25),
-                          //   isScrollControlled: true,
-                          //   context: context,
-                          //   builder: (context) => Wrap(
-                          //     children: [
-                          //       CheckoutBottomSheet(),
-                          //     ],
-                          //   ),
-                          // );
-                        },
-                        color: Pallete.yellowColor,
-                        height: 50.h,
-                        width: 178.w,
-                        text: selected.value == 2
-                            ? 'Add ${AppTexts.naira}${food.price} + increase}'
-                            : 'Add ${AppTexts.naira}${food.price}',
-                      );
-                    }),
+                checkForOrdersFuture.when(
+                  data: (orderId) {
+                    //! if there is an order open in the restaurant
+                    // if (orderId != 'notfound') {
+                    //   return const SizedBox.shrink();
+                    // }
+
+                    return ref.watch(getAllCartItemsProvider(orderId)).when(
+                          data: (cartList) {
+                            bool exists = false;
+                            // log(cartList.toString());
+
+                            for (OrderItemModel item in cartList) {
+                              if (item.name == food.name) {
+                                quantity.value = item.quantity;
+                                cartItemId = item.cartItemId!;
+                                exists = true;
+                                break;
+                              }
+                            }
+
+                            if (!exists) {
+                              return AppFadeAnimation(
+                                delay: 0.5,
+                                child: BButton(
+                                  onTap: () {
+                                    refreshProvider(
+                                        ref, getAllCartItemsProvider(orderId));
+                                    if (!exists) {
+                                      increaseItemInCart(
+                                        ref: ref,
+                                        context: context,
+                                        orderId: orderId,
+                                        menuItemId: food.id,
+                                        quantity: 1,
+                                      );
+                                    } else {
+                                      createOrder(
+                                        ref: ref,
+                                        context: context,
+                                        menuItemId: food.id,
+                                        quantity: 1,
+                                      );
+                                    }
+                                  },
+                                  color: Pallete.yellowColor,
+                                  height: 50.h,
+                                  width: 178.w,
+                                  text: 'Add ${AppTexts.naira}${food.price}',
+                                ),
+                              );
+                            }
+
+                            return const SizedBox.shrink();
+                          },
+                          error: (error, stactrace) {
+                            log(error.toString());
+                            return ErrorText(error: error.toString());
+                          },
+                          loading: () => const SizedBox.shrink(),
+                          // loading: () => const Loader(),
+                        );
+
+                    //! if there are is no order open in the restaurant
+                  },
+                  error: (error, stactrace) {
+                    log(error.toString());
+                    return ErrorText(error: error.toString());
+                  },
+                  loading: () => const Loader(),
+                ),
+                // ValueListenableBuilder(
+                //     valueListenable: selected,
+                //     child: const SizedBox.shrink(),
+                //     builder: (context, value, child) {
+                //       return BButton(
+                //         onTap: () {
+                //           createOrder(
+                //             ref: ref,
+                //             context: context,
+                //             menuItemId: food.id,
+                //             quantity: 1,
+                //           );
+                //           // showModalBottomSheet(
+                //           //   backgroundColor: Colors.transparent,
+                //           //   barrierColor: Colors.black.withOpacity(0.25),
+                //           //   isScrollControlled: true,
+                //           //   context: context,
+                //           //   builder: (context) => Wrap(
+                //           //     children: [
+                //           //       CheckoutBottomSheet(),
+                //           //     ],
+                //           //   ),
+                //           // );
+                //         },
+                //         color: Pallete.yellowColor,
+                //         height: 50.h,
+                //         width: 178.w,
+                //         text: selected.value == 2
+                //             ? 'Add ${AppTexts.naira}${food.price} + increase}'
+                //             : 'Add ${AppTexts.naira}${food.price}',
+                //       );
+                //     }),
               ],
             ),
             40.sbH
@@ -455,4 +700,8 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
       ),
     );
   }
+}
+
+void refreshProvider(WidgetRef ref, ProviderOrFamily provider) {
+  ref.invalidate(provider);
 }

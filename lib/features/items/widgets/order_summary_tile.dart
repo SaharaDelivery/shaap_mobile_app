@@ -28,9 +28,10 @@ class OrderSummaryTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      height: 56.h,
+      height: 60.h,
       width: double.infinity,
       padding: EdgeInsets.all(10.w),
+      margin: EdgeInsets.only(bottom: 15.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: Pallete.borderGrey),
@@ -93,7 +94,7 @@ class OrderSummaryTile extends ConsumerWidget {
           const Spacer(),
           //! add/remove
           Container(
-            height: 29.h,
+            height: 40.h,
             width: 86.w,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5.8.r),
@@ -104,14 +105,14 @@ class OrderSummaryTile extends ConsumerWidget {
                 children: [
                   TransparentButton(
                     onTap: () {},
-                    height: 13.h,
-                    width: 13.w,
+                    height: 24.h,
+                    width: 24.w,
                     isText: false,
                     radius: 3.r,
                     item: Icon(
                       PhosphorIcons.minusBold,
                       color: Colors.black,
-                      size: 10.sp,
+                      size: 12.sp,
                     ),
                   ),
                   Text(
@@ -124,14 +125,14 @@ class OrderSummaryTile extends ConsumerWidget {
                   ),
                   TransparentButton(
                     onTap: () {},
-                    height: 13.h,
-                    width: 13.w,
+                    height: 24.h,
+                    width: 24.w,
                     isText: false,
                     radius: 3.r,
                     item: Icon(
                       PhosphorIcons.plusBold,
                       color: Colors.black,
-                      size: 8.sp,
+                      size: 12.sp,
                     ),
                   ),
                 ],
