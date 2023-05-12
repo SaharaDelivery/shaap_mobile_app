@@ -5,19 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart';
 import 'package:shaap_mobile_app/features/items/widgets/amount_details_widget.dart';
 import 'package:shaap_mobile_app/features/items/widgets/order_summary_tile.dart';
 import 'package:shaap_mobile_app/features/items/widgets/payment_mode_tile.dart';
 import 'package:shaap_mobile_app/features/orders/controllers/order_controller.dart';
+import 'package:shaap_mobile_app/features/profile/controllers/profile_controller.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
+import 'package:shaap_mobile_app/utils/app_multi_value_listenable_builder.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
 import 'package:shaap_mobile_app/utils/error_text.dart';
 import 'package:shaap_mobile_app/utils/loader.dart';
+import 'package:shaap_mobile_app/utils/nav.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
+import 'package:shaap_mobile_app/utils/text_input.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
-class CheckoutBottomSheet extends ConsumerWidget {
+class CheckoutBottomSheet extends ConsumerStatefulWidget {
   final String orderId;
   const CheckoutBottomSheet({
     super.key,
@@ -25,9 +30,45 @@ class CheckoutBottomSheet extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CheckoutBottomSheetState();
+}
+
+class _CheckoutBottomSheetState extends ConsumerState<CheckoutBottomSheet> {
+  final ValueNotifier<String> address_1 = ValueNotifier('');
+  final ValueNotifier<String> address_2 = ValueNotifier('');
+  final TextEditingController _generalAreaController = TextEditingController();
+  final TextEditingController _specificController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final user = ref.watch(userProvider)!;
+    // String address_1 = '';
+    // String address_2 = '';
     final ValueNotifier<int> selected = ValueNotifier(0);
-    final orderDetailsFuture = ref.watch(getOrderDetailsProvider(orderId));
+    final orderDetailsFuture =
+        ref.watch(getOrderDetailsProvider(widget.orderId));
+    final ValueNotifier<int> quantity = ValueNotifier(0);
+    final ValueNotifier<int> addCount = ValueNotifier(0);
+    int? cartItemId;
+    final isLoading = ref.watch(orderControllerProvider);
+    final addressesFuture = ref.watch(getUsersSavedAddressProvider);
+
+    void addAddress({
+      required WidgetRef ref,
+      required String address_1,
+      required String address_2,
+      required String phone_number,
+      required String email,
+    }) {
+      ref.watch(profileControllerProvider.notifier).addtemporaryAddress(
+            context: context,
+            address_1: address_1,
+            address_2: address_2,
+            phone_number: phone_number,
+            email: email,
+          );
+    }
 
     return Container(
       height: 745.h,
@@ -102,12 +143,212 @@ class CheckoutBottomSheet extends ConsumerWidget {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            Text(
-                              AppTexts.edit,
-                              style: TextStyle(
-                                color: Pallete.yellowColor,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
+                            InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (context) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom),
+                                      child: Wrap(
+                                        children: [
+                                          Container(
+                                            // height: 250.h,
+                                            // padding: EdgeInsets.all(20),
+                                            decoration: BoxDecoration(
+                                              color: Pallete.whiteColor,
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: Radius.circular(30.r),
+                                              ),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                30.sbH,
+                                                addressesFuture.when(
+                                                  data: (addresses) {
+                                                    if (addresses.isEmpty) {
+                                                      return ErrorText(
+                                                        error:
+                                                            'You have no saved address',
+                                                      );
+                                                    }
+
+                                                    return Column(
+                                                        children: List.generate(
+                                                            addresses.length,
+                                                            (index) => InkWell(
+                                                                onTap: () {
+                                                                  address_2
+                                                                      .value = addresses[
+                                                                          index]
+                                                                      .address_2;
+                                                                  address_1
+                                                                      .value = addresses[
+                                                                          index]
+                                                                      .address_1;
+
+                                                                  address_1
+                                                                      .notifyListeners();
+                                                                  address_2
+                                                                      .notifyListeners();
+
+                                                                  log(address_1
+                                                                      .value);
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                        height: 56
+                                                                            .h,
+                                                                        width: double
+                                                                            .infinity,
+                                                                        margin: EdgeInsets.symmetric(horizontal: 24.w).copyWith(
+                                                                            bottom: 16
+                                                                                .h),
+                                                                        padding: EdgeInsets.symmetric(
+                                                                            vertical: 8
+                                                                                .h,
+                                                                            horizontal: 12
+                                                                                .w),
+                                                                        decoration: BoxDecoration(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(8.r),
+                                                                            border: Border.all(color: Pallete.borderGrey)),
+                                                                        child: Row(
+                                                                          children: [
+                                                                            SvgPicture.asset('llocation'.svg),
+                                                                            12.sbW,
+                                                                            Column(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                Text(
+                                                                                  addresses[index].address_2,
+                                                                                  style: TextStyle(
+                                                                                    color: Pallete.textBlack,
+                                                                                    fontSize: 14.sp,
+                                                                                    fontWeight: FontWeight.w400,
+                                                                                  ),
+                                                                                ),
+                                                                                Text(
+                                                                                  addresses[index].address_1,
+                                                                                  style: TextStyle(
+                                                                                    color: Pallete.textGreylighter,
+                                                                                    fontSize: 12.sp,
+                                                                                    fontWeight: FontWeight.w400,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ],
+                                                                        )))));
+                                                  },
+                                                  error: (error, stactrace) {
+                                                    log(error.toString());
+                                                    return ErrorText(
+                                                        error:
+                                                            error.toString());
+                                                  },
+                                                  loading: () => const Loader(),
+                                                ),
+                                                10.sbH,
+
+                                                //! add temporary address
+                                                Text(
+                                                  'Add temporary address',
+                                                  style: TextStyle(
+                                                    color: Pallete.textBlack,
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                                20.sbH,
+
+                                                //! input fields
+                                                Padding(
+                                                  padding: 24.padH,
+                                                  child: TextInputWidget(
+                                                    hintText: '15B, Jhn Street',
+                                                    inputTitle: 'Specific Area',
+                                                    controller:
+                                                        _specificController,
+                                                  ),
+                                                ),
+                                                24.sbH,
+                                                Padding(
+                                                  padding: 24.padH,
+                                                  child: TextInputWidget(
+                                                    hintText:
+                                                        ' Doe Estate, Lokogoma',
+                                                    inputTitle: 'General Area',
+                                                    controller:
+                                                        _generalAreaController,
+                                                  ),
+                                                ),
+
+                                                20.sbH,
+
+                                                // isLoading
+                                                //     ? const Loader()
+                                                //     :
+                                                Padding(
+                                                  padding: 24.padH,
+                                                  child: BButton(
+                                                    onTap: () {
+                                                      if (_specificController
+                                                              .text
+                                                              .isNotEmpty &&
+                                                          _generalAreaController
+                                                              .text
+                                                              .isNotEmpty) {
+                                                        address_2.value =
+                                                            _specificController
+                                                                .text;
+
+                                                        address_1.value =
+                                                            _generalAreaController
+                                                                .text;
+
+                                                        address_1
+                                                            .notifyListeners();
+                                                        address_2
+                                                            .notifyListeners();
+                                                        
+                                                        _specificController.clear();
+                                                        _generalAreaController.clear();
+                                                        goBack(context);
+
+                                                        log(address_1.value);
+                                                      }
+                                                    },
+                                                    text: 'Use Address',
+                                                  ),
+                                                ),
+
+                                                40.sbH,
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              child: Text(
+                                AppTexts.edit,
+                                style: TextStyle(
+                                  color: Pallete.yellowColor,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ],
@@ -116,46 +357,101 @@ class CheckoutBottomSheet extends ConsumerWidget {
 
                       17.sbH,
                       // for address
-                      Container(
-                        height: 56.h,
-                        width: double.infinity,
-                        margin: 24.padH,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 8.h,
-                          horizontal: 12.w,
-                        ),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.r),
-                            border: Border.all(color: Pallete.borderGrey)),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset('llocation'.svg),
-                            12.sbW,
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '15,anthony,oregun,ikeja,lagos nigeria',
-                                  style: TextStyle(
-                                    color: Pallete.textBlack,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
+                      addressesFuture.when(
+                        data: (addresses) {
+                          if (addresses.isNotEmpty) {
+                            address_1.value = addresses[0].address_1;
+                            address_2.value = addresses[0].address_2;
+                          }
+
+                          if (addresses.isEmpty) {
+                            return Container(
+                              height: 56.h,
+                              width: double.infinity,
+                              margin: 24.padH,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 8.h,
+                                horizontal: 12.w,
+                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  border:
+                                      Border.all(color: Pallete.borderGrey)),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset('llocation'.svg),
+                                  12.sbW,
+                                  Text(
+                                    'You have no saved address',
+                                    style: TextStyle(
+                                      color: Pallete.textBlack,
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  '15,anthony,oregun,ikeja,lagos nigeria',
-                                  style: TextStyle(
-                                    color: Pallete.textGreylighter,
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
+                                ],
+                              ),
+                            );
+                          }
+
+                          return AppMultiListenableProvider(
+                              firstValue: address_1,
+                              secondValue: address_2,
+                              child: const SizedBox.shrink(),
+                              builder:
+                                  (context, firstValue, secondValue, child) {
+                                return Container(
+                                  height: 56.h,
+                                  width: double.infinity,
+                                  margin: 24.padH,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 8.h,
+                                    horizontal: 12.w,
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      border: Border.all(
+                                          color: Pallete.borderGrey)),
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset('llocation'.svg),
+                                      12.sbW,
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            address_2.value,
+                                            style: TextStyle(
+                                              color: Pallete.textBlack,
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Text(
+                                            address_1.value,
+                                            style: TextStyle(
+                                              color: Pallete.textGreylighter,
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                        },
+                        error: (error, stactrace) {
+                          log(error.toString());
+                          return ErrorText(error: error.toString());
+                        },
+                        loading: () => const Loader(),
                       ),
+
                       17.sbH,
 
                       //! delivery time
@@ -215,12 +511,19 @@ class CheckoutBottomSheet extends ConsumerWidget {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            Text(
-                              AppTexts.addItems,
-                              style: TextStyle(
-                                color: Pallete.yellowColor,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
+                            InkWell(
+                              onTap: () {
+                                goBack(context);
+                              },
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              child: Text(
+                                AppTexts.addItems,
+                                style: TextStyle(
+                                  color: Pallete.yellowColor,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ],
@@ -229,18 +532,38 @@ class CheckoutBottomSheet extends ConsumerWidget {
                       17.sbH,
                       Padding(
                         padding: 24.padH,
-                        child: Column(
-                          children: order.orderItem
-                              .map(
-                                (e) => OrderSummaryTile(
-                                  name: e.name,
-                                  price: e.price,
-                                  quantity: e.quantity,
-                                  imageUrl: e.imageUrl,
-                                ),
-                              )
-                              .toList(),
-                        ),
+                        child: ref
+                            .watch(getAllCartItemsProvider(widget.orderId))
+                            .when(
+                              data: (cartList) {
+                                return Column(
+                                  children: List.generate(
+                                    cartList.length,
+                                    (index) => OrderSummaryTile(
+                                      onTap: () {
+                                        log(cartList[index]
+                                            .cartItemId
+                                            .toString());
+                                      },
+                                      menuItem:
+                                          order.orderItem[index].cartItemId,
+                                      orderId: widget.orderId,
+                                      cartItemId: cartList[index].cartItemId,
+                                      name: cartList[index].name,
+                                      price: cartList[index].price,
+                                      quantity: cartList[index].quantity,
+                                      imageUrl: cartList[index].imageUrl,
+                                    ),
+                                  ),
+                                );
+                              },
+                              error: (error, stactrace) {
+                                log(error.toString());
+                                return ErrorText(error: error.toString());
+                              },
+                              loading: () => const Loader(),
+                            ),
+
                         // const OrderSummaryTile(),
                       ),
                       24.sbH,

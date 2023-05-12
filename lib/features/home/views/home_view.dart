@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart';
 import 'package:shaap_mobile_app/features/home/widgets/item_card_widget.dart';
+import 'package:shaap_mobile_app/features/profile/controllers/profile_controller.dart';
 import 'package:shaap_mobile_app/features/restaurants/controllers/restaurants_comtroller.dart';
 import 'package:shaap_mobile_app/features/restaurants/views/restaurant_bottom_sheet.dart';
 import 'package:shaap_mobile_app/features/restaurants/views/search_restaurants_view.dart';
@@ -53,6 +54,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     //! providers
     final user = ref.watch(userProvider)!;
     final allRestaurants = ref.watch(getAllRestaurantsProvider);
+    final addressesFuture = ref.watch(getUsersSavedAddressProvider);
 
     //
     _height = 253.h;

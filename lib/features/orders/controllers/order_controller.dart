@@ -82,7 +82,6 @@ class OrderController extends StateNotifier<bool> {
       (r) {
         log(r);
         log('Order Created');
-        return null;
       },
     );
   }

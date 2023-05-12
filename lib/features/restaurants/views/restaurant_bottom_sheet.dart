@@ -52,6 +52,11 @@ class _RestaurantBottomSheetState extends ConsumerState<RestaurantBottomSheet> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final restaurantDetailsFuture =
         ref.watch(getRestaurantDetailsProvider(widget.restauranstId));

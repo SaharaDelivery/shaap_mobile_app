@@ -1,4 +1,5 @@
-import 'dart:developer';
+import 'dart:developer' as log;
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -19,61 +20,7 @@ import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
 import '../../../theme/palette.dart';
 
-// class ItemDetailsBottomSheet extends ConsumerStatefulWidget {
-//   final int restaurantId;
-//   final FoodModel food;
-//   const ItemDetailsBottomSheet({
-//     super.key,
-//     required this.restaurantId,
-//     required this.food,
-//   });
-
-//   @override
-//   ConsumerState<ConsumerStatefulWidget> createState() =>
-//       _ItemDetailsBottomSheetState();
-// }
-
-// class _ItemDetailsBottomSheetState
-//     extends ConsumerState<ItemDetailsBottomSheet> {
-
-//   void createOrder({
-//     required WidgetRef ref,
-//     required BuildContext context,
-//     required int menuItemId,
-//     required int quantity,
-//   }) {
-//     ref.read(orderControllerProvider.notifier).createAnOrder(
-//           context: context,
-//           restaurantId: restaurantId,
-//           menuItemId: menuItemId,
-//           quantity: quantity,
-//         );
-//   }
-
-//   void increaseItemInCart({
-//     required WidgetRef ref,
-//     required BuildContext context,
-//     required String orderId,
-//     required int menuItemId,
-//     required int quantity,
-//   }) {
-//     ref
-//         .read(orderControllerProvider.notifier)
-//         .increaseItemInCartAddItemToExistingCart(
-//           context: context,
-//           orderId: orderId,
-//           menuItemId: menuItemId,
-//           quantity: quantity,
-//         );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container();
-//   }
-// }
-
-class ItemDetailsBottomSheet extends ConsumerWidget {
+class ItemDetailsBottomSheet extends ConsumerStatefulWidget {
   final int restaurantId;
   final FoodModel food;
   const ItemDetailsBottomSheet({
@@ -81,6 +28,37 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
     required this.restaurantId,
     required this.food,
   });
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ItemDetailsBottomSheetState();
+}
+
+class _ItemDetailsBottomSheetState extends ConsumerState<ItemDetailsBottomSheet>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  final ValueNotifier<int> selected = ValueNotifier(0);
+  final ValueNotifier<int> quantity = ValueNotifier(0);
+  final ValueNotifier<int> addCount = ValueNotifier(0);
+  int? cartItemId;
+  final double increase = 1200;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   void createOrder({
     required WidgetRef ref,
@@ -90,7 +68,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
   }) {
     ref.read(orderControllerProvider.notifier).createAnOrder(
           context: context,
-          restaurantId: restaurantId,
+          restaurantId: widget.restaurantId,
           menuItemId: menuItemId,
           quantity: quantity,
         );
@@ -125,17 +103,16 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final ValueNotifier<int> selected = ValueNotifier(0);
-    final ValueNotifier<int> quantity = ValueNotifier(0);
-    final ValueNotifier<int> addCount = ValueNotifier(0);
-    int? cartItemId;
-    final double increase = 1200;
+  Widget build(BuildContext context) {
+    final checkForOrdersFuture = ref.watch(
+        checkIfOrderExistsInRestaurantProvider(widget.restaurantId.toString()));
+    final isLoading = ref.watch(orderControllerProvider);
 
-    final checkForOrdersFuture = ref
-        .watch(checkIfOrderExistsInRestaurantProvider(restaurantId.toString()));
-
-    // double priceInDouble = double.parse(price);
+    // if (isLoading) {
+    //   _controller.repeat();
+    // } else {
+    //   _controller.stop();
+    // }
 
     return Container(
       height: 745.h,
@@ -149,7 +126,11 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
       ),
       child: Padding(
         padding: 24.padH,
-        child: Column(
+        child:
+            //  isLoading
+            //     ? const Loader()
+            //     :
+            Column(
           children: [
             15.sbH,
             Row(
@@ -173,7 +154,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  food.name,
+                  widget.food.name,
                   style: TextStyle(
                     color: Pallete.textBlack,
                     fontSize: 16.sp,
@@ -197,7 +178,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(12.r),
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: food.image,
+                  imageUrl: widget.food.image,
                   placeholder: (context, url) => Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -225,7 +206,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                food.name,
+                widget.food.name,
                 style: TextStyle(
                   color: Pallete.textBlack,
                   fontSize: 20.sp,
@@ -239,7 +220,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                '${AppTexts.naira} ${food.price}',
+                '${AppTexts.naira} ${widget.food.price}',
                 style: TextStyle(
                   color: Pallete.textBlack,
                   fontSize: 14.sp,
@@ -260,7 +241,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
               ),
               child: Center(
                 child: Text(
-                  food.description,
+                  widget.food.description,
                   maxLines: 2,
                   textAlign: TextAlign.start,
                   style: TextStyle(
@@ -278,7 +259,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Choose your ${food.name}',
+                'Choose your ${widget.food.name}',
                 style: TextStyle(
                   color: Pallete.textGrey,
                   fontSize: 14.sp,
@@ -384,7 +365,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                               ),
                               16.sbW,
                               Text(
-                                food.name,
+                                widget.food.name,
                                 style: TextStyle(
                                   color: Pallete.textBlack,
                                   fontSize: 14.sp,
@@ -432,7 +413,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: food.name,
+                                      text: widget.food.name,
                                       style: TextStyle(
                                         color: Pallete.textBlack,
                                         fontSize: 14.sp,
@@ -473,13 +454,15 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                               // log(cartList.toString());
 
                               for (OrderItemModel item in cartList) {
-                                if (item.name == food.name) {
+                                if (item.name == widget.food.name) {
                                   quantity.value = item.quantity;
-                                  cartItemId = item.cartItemId!;
+                                  cartItemId = item.cartItemId;
                                   exists = true;
                                   break;
                                 }
                               }
+
+                              log.log(cartItemId.toString());
 
                               if (exists) {
                                 return ValueListenableBuilder(
@@ -503,10 +486,6 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                                             children: [
                                               TransparentButton(
                                                 onTap: () {
-                                                  refreshProvider(
-                                                      ref,
-                                                      getAllCartItemsProvider(
-                                                          orderId));
                                                   if (quantity.value > 0) {
                                                     reduceItemQuantityInCart(
                                                       ref: ref,
@@ -514,6 +493,10 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                                                       cartItemId: cartItemId!
                                                           .toString(),
                                                     );
+                                                    refreshProvider(
+                                                        ref,
+                                                        getAllCartItemsProvider(
+                                                            orderId));
                                                     quantity.value--;
                                                     addCount.value--;
                                                   }
@@ -527,27 +510,38 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                                                   size: 16.sp,
                                                 ),
                                               ),
-                                              Text(
-                                                quantity.value.toString(),
-                                                style: TextStyle(
-                                                  color: Pallete.blackColor,
-                                                  fontSize: 19.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
+                                              isLoading
+                                                  ? const NLoader()
+                                                  : Text(
+                                                      quantity.value.toString(),
+                                                      style: TextStyle(
+                                                        color:
+                                                            Pallete.blackColor,
+                                                        fontSize: 19.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ).animate().scale(
+                                                      duration: 500.ms,
+                                                      begin: 0,
+                                                      end: 1),
                                               TransparentButton(
                                                 onTap: () {
                                                   quantity.value++;
                                                   addCount.value++;
-                                                  log(addCount.value
+                                                  log.log(addCount.value
                                                       .toString());
                                                   increaseItemInCart(
                                                     ref: ref,
                                                     context: context,
                                                     orderId: orderId,
-                                                    menuItemId: food.id,
+                                                    menuItemId: widget.food.id,
                                                     quantity: 1,
                                                   );
+                                                  refreshProvider(
+                                                      ref,
+                                                      getAllCartItemsProvider(
+                                                          orderId));
                                                 },
                                                 height: 40.h,
                                                 width: 40.w,
@@ -571,7 +565,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                               }
                             },
                             error: (error, stactrace) {
-                              log(error.toString());
+                              log.log(error.toString());
                               return ErrorText(error: error.toString());
                             },
                             loading: () => const SizedBox.shrink(),
@@ -582,7 +576,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                     return const SizedBox.shrink();
                   },
                   error: (error, stactrace) {
-                    log(error.toString());
+                    log.log(error.toString());
                     return ErrorText(error: error.toString());
                   },
                   loading: () => const Loader(),
@@ -602,9 +596,9 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                             // log(cartList.toString());
 
                             for (OrderItemModel item in cartList) {
-                              if (item.name == food.name) {
+                              if (item.name == widget.food.name) {
                                 quantity.value = item.quantity;
-                                cartItemId = item.cartItemId!;
+                                cartItemId = item.cartItemId;
                                 exists = true;
                                 break;
                               }
@@ -613,39 +607,45 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                             if (!exists) {
                               return AppFadeAnimation(
                                 delay: 0.5,
-                                child: BButton(
-                                  onTap: () {
-                                    refreshProvider(
-                                        ref, getAllCartItemsProvider(orderId));
-                                    if (!exists) {
-                                      increaseItemInCart(
-                                        ref: ref,
-                                        context: context,
-                                        orderId: orderId,
-                                        menuItemId: food.id,
-                                        quantity: 1,
-                                      );
-                                    } else {
-                                      createOrder(
-                                        ref: ref,
-                                        context: context,
-                                        menuItemId: food.id,
-                                        quantity: 1,
-                                      );
-                                    }
-                                  },
-                                  color: Pallete.yellowColor,
-                                  height: 50.h,
-                                  width: 178.w,
-                                  text: 'Add ${AppTexts.naira}${food.price}',
-                                ),
+                                child: isLoading
+                                    ? SizedBox(
+                                        height: 50.h,
+                                        width: 178.w,
+                                        child: const NLoader())
+                                    : BButton(
+                                        onTap: () {
+                                          refreshProvider(ref,
+                                              getAllCartItemsProvider(orderId));
+                                          if (!exists) {
+                                            increaseItemInCart(
+                                              ref: ref,
+                                              context: context,
+                                              orderId: orderId,
+                                              menuItemId: widget.food.id,
+                                              quantity: 1,
+                                            );
+                                          } else {
+                                            createOrder(
+                                              ref: ref,
+                                              context: context,
+                                              menuItemId: widget.food.id,
+                                              quantity: 1,
+                                            );
+                                          }
+                                        },
+                                        color: Pallete.yellowColor,
+                                        height: 50.h,
+                                        width: 178.w,
+                                        text:
+                                            'Add ${AppTexts.naira}${widget.food.price}',
+                                      ),
                               );
                             }
 
                             return const SizedBox.shrink();
                           },
                           error: (error, stactrace) {
-                            log(error.toString());
+                            log.log(error.toString());
                             return ErrorText(error: error.toString());
                           },
                           loading: () => const SizedBox.shrink(),
@@ -655,7 +655,7 @@ class ItemDetailsBottomSheet extends ConsumerWidget {
                     //! if there are is no order open in the restaurant
                   },
                   error: (error, stactrace) {
-                    log(error.toString());
+                    log.log(error.toString());
                     return ErrorText(error: error.toString());
                   },
                   loading: () => const Loader(),

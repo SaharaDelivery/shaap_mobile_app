@@ -44,64 +44,67 @@ class OrdersView extends ConsumerWidget {
               //! body
               Expanded(
                 child: ordersFuture.when(
-                  data: (orders) => orders.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset('no-orders'.svg),
-                              24.sbH,
-                              Text(
-                                AppTexts.noOrders,
-                                style: TextStyle(
-                                  color: Pallete.textBlack,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
+                  data: (orders) {
+                    log(orders.length.toString());
+                    return orders.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset('no-orders'.svg),
+                                24.sbH,
+                                Text(
+                                  AppTexts.noOrders,
+                                  style: TextStyle(
+                                    color: Pallete.textBlack,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              10.sbH,
-                              Text(
-                                AppTexts.youHaveNoOrder,
-                                style: TextStyle(
-                                  color: Pallete.textBlack,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w400,
+                                10.sbH,
+                                Text(
+                                  AppTexts.youHaveNoOrder,
+                                  style: TextStyle(
+                                    color: Pallete.textBlack,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : ListView.builder(
-                          itemCount: orders.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: 20.h),
-                              child: OrdersTile(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    backgroundColor: Colors.transparent,
-                                    barrierColor: Pallete.blackColor,
-                                    isScrollControlled: true,
-                                    context: context,
-                                    builder: (context) => Wrap(
-                                      children: [
-                                        TrackOrdersBottomSheet(
-                                          order: orders[index],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                restaurantName: orders[index].restaurant.name,
-                                orderID: orders[index].order_id,
-                                image: 'food-1',
-                                status: 'Processing',
-                                details:
-                                    ' ${orders[index].orderItem[0].quantity}x ${orders[index].orderItem[0].name}',
-                              ),
-                            );
-                          },
-                        ),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: orders.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.only(bottom: 20.h),
+                                child: OrdersTile(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      backgroundColor: Colors.transparent,
+                                      barrierColor: Pallete.blackColor,
+                                      isScrollControlled: true,
+                                      context: context,
+                                      builder: (context) => Wrap(
+                                        children: [
+                                          TrackOrdersBottomSheet(
+                                            order: orders[index],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  restaurantName: orders[index].restaurant.name,
+                                  orderID: orders[index].order_id,
+                                  image: 'food-1',
+                                  status: 'Processing',
+                                  //! TODO: fix when there are items
+                                  details: '',
+                                ),
+                              );
+                            },
+                          );
+                  },
                   error: (error, stactrace) =>
                       ErrorText(error: error.toString()),
                   loading: () => const Loader(),

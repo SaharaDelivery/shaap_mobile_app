@@ -86,6 +86,8 @@ class OrderRepository {
             "Authorization": "Token $token",
           });
 
+      log(token!);
+
       switch (response.statusCode) {
         case 200:
           final responseString = jsonDecode(response.body);
@@ -97,7 +99,7 @@ class OrderRepository {
         default:
           res = 'notfound';
       }
-      log(response.statusCode.toString());
+
       log(res!);
 
       return res;
@@ -130,6 +132,8 @@ class OrderRepository {
         final List<dynamic> orderItemsResultList = responseData['order_items'];
         final List<OrderItemModel> orderItems = orderItemsResultList
             .map((item) => OrderItemModel(
+                  orderId: orderId,
+                  cartItemId: item['menu_item']['id'],
                   name: item['menu_item']['name'],
                   price: item['menu_item']['price'],
                   imageUrl: item['menu_item']['image'],
@@ -183,9 +187,11 @@ class OrderRepository {
           (e) {
             final List<OrderItemModel> orderItems = orderItemsResultList
                 .map((item) => OrderItemModel(
+                      orderId: e['order_id'],
+                      cartItemId: item['menu_item']['id'],
                       name: item['menu_item']['name'],
                       price: item['menu_item']['price'],
-                      imageUrl: '',
+                      imageUrl: item['menu_item']['image'],
                       quantity: item['quantity'],
                     ))
                 .toList();
@@ -222,8 +228,8 @@ class OrderRepository {
     try {
       String? token = await _sharedPrefs.getString(key: 'x-auth-token');
 
-      http.Request request =
-          http.Request('POST', Uri.parse(AppUrls.increaseCartItemQuantityAddItemsToCart));
+      http.Request request = http.Request(
+          'POST', Uri.parse(AppUrls.increaseCartItemQuantityAddItemsToCart));
 
       request.headers.addAll({
         "Content-Type": "application/json; charset=UTF-8",
@@ -271,13 +277,14 @@ class OrderRepository {
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
+        log(responseData.toString());
         final List<OrderItemModel> orderItems = responseData
             .map((item) => OrderItemModel(
+                  orderId: item['order_id'],
                   cartItemId: item['id'],
                   name: item['menu_item']['name'],
                   price: item['menu_item']['price'],
-                  // imageUrl: item['menu_item']['image'],
-                  imageUrl: '',
+                  imageUrl: item['menu_item']['image'],
                   quantity: item['quantity'],
                 ))
             .toList();

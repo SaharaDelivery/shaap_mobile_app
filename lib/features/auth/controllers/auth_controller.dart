@@ -10,6 +10,7 @@ import 'package:shaap_mobile_app/features/base_nav_wrapper/views/base_nav_wrappe
 import 'package:shaap_mobile_app/features/onboarding/views/onboarding_view.dart';
 import 'package:shaap_mobile_app/main.dart';
 import 'package:shaap_mobile_app/models/user_model.dart';
+import 'package:shaap_mobile_app/utils/failure.dart';
 import 'package:shaap_mobile_app/utils/shared_prefs.dart';
 import 'package:shaap_mobile_app/utils/type_defs.dart';
 import 'package:shaap_mobile_app/utils/utils.dart';
@@ -152,13 +153,18 @@ class AuthController extends StateNotifier<bool> {
   }
 
   void logout(BuildContext context) async {
-    _authRepository.logout();
-    // Navigator.of(context).pushReplacement(
-    //   MaterialPageRoute(
-    //     builder: (context) => const OnboardingView(),
-    //   ),
-    // );
-    _ref.read(userProvider.notifier).update((state) => null);
+    state = true;
+    final res = await _authRepository.logout();
+    state = false;
+    res.fold(
+      (l) => log(l.message),
+      (r) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const LoginView(),
+        ));
+        _ref.read(userProvider.notifier).update((state) => null);
+      },
+    );
   }
 
   // //! get user data

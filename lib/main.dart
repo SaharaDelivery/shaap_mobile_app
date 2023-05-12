@@ -45,6 +45,8 @@ class _MyAppState extends ConsumerState<MyApp> {
     if (errorModel != null && errorModel!.data != null) {
       ref.read(userProvider.notifier).update((state) => errorModel!.data);
     }
+    String? token = await SharedPrefs().getString(key: 'x-auth-token');
+    log(token.toString());
   }
 
   @override
@@ -70,8 +72,9 @@ class _MyAppState extends ConsumerState<MyApp> {
             routesBuilder: (context) {
               if (user != null && user.token.isNotEmpty) {
                 return loggedInRoute;
+              } else {
+                return loggedOutRoute;
               }
-              return loggedOutRoute;
             },
           ),
           // home: user != null && user.token.isNotEmpty

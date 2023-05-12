@@ -39,3 +39,23 @@ class Loader extends ConsumerWidget {
     );
   }
 }
+
+class NLoader extends ConsumerWidget {
+  const NLoader({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currenTheme = ref.watch(themeNotifierProvider);
+    return Center(
+      child: SizedBox(
+        height: 14,
+        width: 14,
+        child: LoadingAnimationWidget.flickr(
+          leftDotColor: Pallete.yellowColor,
+          rightDotColor: Pallete.blackColor,
+          size: 60,
+        ),
+      ),
+    );
+  }
+}

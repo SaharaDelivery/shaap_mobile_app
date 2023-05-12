@@ -212,6 +212,4 @@ class RestaurantsRepository {
       throw Exception('No internet connection');
     }
   }
-
-  // Future<FoodModel>
 }

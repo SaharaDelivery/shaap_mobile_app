@@ -30,19 +30,6 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      UserModel userModel = const UserModel(
-        email: '',
-        firstName: '',
-        lastName: '',
-        userName: '',
-        phoneNumber: '',
-        profilePic: '',
-        uid: '',
-        token: '',
-      );
-
-      late UserModel newUser;
-
       late String message;
 
       final body = {
@@ -77,16 +64,6 @@ class AuthRepository {
           key: 'id',
           stringToStore: response.body.toString(),
         );
-        // newUser = UserModel(
-        //   email: email,
-        //   firstName: '',
-        //   lastName: '',
-        //   userName: '',
-        //   phoneNumber: '',
-        //   profilePic: '',
-        //   uid: response.body,
-        //   token: '',
-        // );
       } else {
         message = response.reasonPhrase!;
       }
@@ -159,7 +136,7 @@ class AuthRepository {
         token: '',
       );
 
-      late UserModel newUser;
+      // late UserModel newUser;
 
       http.Request request = http.Request('POST', Uri.parse(AppUrls.userLogin));
 
@@ -178,50 +155,57 @@ class AuthRepository {
 
       Map<String, dynamic> responseInMap = jsonDecode(responseStream);
 
+      log(response.statusCode.toString());
+
       if (response.statusCode == 200) {
         _sharedPrefs.setString(
             key: 'x-auth-token', stringToStore: responseInMap['token']);
-        newUser = userModel.copyWith(
+        userModel = userModel.copyWith(
           uid: responseInMap['user']['id'].toString(),
           firstName: responseInMap['user']['first_name'],
           lastName: responseInMap['user']['last_name'],
           phoneNumber: responseInMap['user']['phone_number'],
           email: responseInMap['user']['email'],
         );
-      } else {}
-
-      final String token =
-          await SharedPrefs().getString(key: 'x-auth-token') ?? '';
-
-      log(token);
-      log(responseInMap['token'].toString());
-      return right(newUser);
+        return right(userModel);
+      } else {
+        return left(Failure('error'));
+      }
     } catch (e) {
       log(e.toString());
       return left(Failure(e.toString()));
     }
   }
 
-  void logout() async {
+  //! log out
+  FutureVoid logout() async {
     try {
       String? token = await _sharedPrefs.getString(key: 'x-auth-token');
-      if (token != null) {
-        http.Request request =
-            http.Request('GET', Uri.parse(AppUrls.userLogout));
 
-        request.headers.addAll({'Authorization': 'Token $token'});
+      http.Request request =
+          http.Request('POST', Uri.parse(AppUrls.userLogout));
 
-        http.StreamedResponse response = await request.send();
+      request.headers.addAll({
+        "Content-Type": "application/json; charset=UTF-8",
+        'Authorization': 'Token $token'
+      });
 
-        if (response.statusCode == 200) {
-          log('Log out successful');
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-           final res = await preferences.remove('x-auth-token');
-           log(res.toString());
-        }
+      http.StreamedResponse response = await request.send();
+
+      log(response.reasonPhrase.toString());
+
+      if (response.statusCode == 200) {
+        // log('Log out successful');
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        final res = await preferences.remove('x-auth-token');
+        log(res.toString());
+        return right(null);
+      } else {
+        return left(Failure('Error'));
       }
     } catch (e) {
       log(e.toString());
+      return left(Failure(e.toString()));
     }
   }
 
