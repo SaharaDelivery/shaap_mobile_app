@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:shaap_mobile_app/theme/palette.dart';
 
 class TextInputWidget extends StatelessWidget {
@@ -25,6 +26,7 @@ class TextInputWidget extends StatelessWidget {
   final void Function()? onTap;
   final void Function(PointerDownEvent)? onTapOutside;
   final Widget? iconn;
+  final int? maxLength;
   const TextInputWidget({
     Key? key,
     this.height,
@@ -47,6 +49,7 @@ class TextInputWidget extends StatelessWidget {
     this.onTap,
     this.onTapOutside,
     this.iconn,
+    this.maxLength,
   }) : super(key: key);
 
   @override
@@ -55,7 +58,7 @@ class TextInputWidget extends StatelessWidget {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: onTap,
-      child: Container(
+      child: SizedBox(
         // color: Colors.red,
         height: 66.h,
         width: width ?? double.infinity,
@@ -74,6 +77,7 @@ class TextInputWidget extends StatelessWidget {
             SizedBox(
               height: 40.h,
               child: TextFormField(
+                maxLength: maxLength,
                 onTap: onTap,
                 onTapOutside: onTapOutside,
                 keyboardType: keyboardType,
@@ -97,6 +101,8 @@ class TextInputWidget extends StatelessWidget {
                   helperStyle: const TextStyle(fontSize: 0.0005),
                   errorStyle: const TextStyle(fontSize: 0.0005),
                   suffixIcon: suffixIcon,
+                  suffixIconConstraints:
+                      BoxConstraints(minHeight: 20.h, minWidth: 20.w),
                   hintText: hintText,
                   hintStyle: TextStyle(
                     fontSize: 16.sp,
@@ -112,7 +118,7 @@ class TextInputWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Pallete.borderGrey),
+                    borderSide: const BorderSide(color: Pallete.yellowColor),
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   errorBorder: OutlineInputBorder(
@@ -120,7 +126,7 @@ class TextInputWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Pallete.borderGrey),
+                    borderSide: const BorderSide(color: Pallete.yellowColor),
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                 ),

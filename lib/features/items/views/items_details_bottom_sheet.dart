@@ -1,5 +1,4 @@
 import 'dart:developer' as log;
-import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:shaap_mobile_app/features/orders/controllers/order_controller.dart';
-import 'package:shaap_mobile_app/features/restaurants/controllers/restaurants_comtroller.dart';
 import 'package:shaap_mobile_app/models/food_model.dart';
 import 'package:shaap_mobile_app/models/order_item_model.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
@@ -49,7 +47,7 @@ class _ItemDetailsBottomSheetState extends ConsumerState<ItemDetailsBottomSheet>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
   }
@@ -368,7 +366,7 @@ class _ItemDetailsBottomSheetState extends ConsumerState<ItemDetailsBottomSheet>
                                 widget.food.name,
                                 style: TextStyle(
                                   color: Pallete.textBlack,
-                                  fontSize: 14.sp,
+                                  fontSize: 17.sp,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -586,9 +584,38 @@ class _ItemDetailsBottomSheetState extends ConsumerState<ItemDetailsBottomSheet>
                 checkForOrdersFuture.when(
                   data: (orderId) {
                     //! if there is an order open in the restaurant
-                    // if (orderId != 'notfound') {
-                    //   return const SizedBox.shrink();
-                    // }
+                    if (orderId == 'notfound') {
+                      return AppFadeAnimation(
+                        delay: 0.5,
+                        child: isLoading
+                            ? SizedBox(
+                                height: 50.h,
+                                width: 178.w,
+                                child: const NLoader())
+                            : BButton(
+                                onTap: () {
+                                  refreshProvider(
+                                      ref, getAllCartItemsProvider(orderId));
+
+                                  createOrder(
+                                    ref: ref,
+                                    context: context,
+                                    menuItemId: widget.food.id,
+                                    quantity: 1,
+                                  );
+                                  refreshProvider(
+                                      ref,
+                                      checkIfOrderExistsInRestaurantProvider(
+                                          widget.restaurantId.toString()));
+                                },
+                                color: Pallete.yellowColor,
+                                height: 50.h,
+                                width: 178.w,
+                                text:
+                                    'Add ${AppTexts.naira}${widget.food.price}',
+                              ),
+                      );
+                    }
 
                     return ref.watch(getAllCartItemsProvider(orderId)).when(
                           data: (cartList) {

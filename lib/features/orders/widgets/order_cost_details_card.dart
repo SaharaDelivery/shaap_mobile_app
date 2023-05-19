@@ -9,7 +9,6 @@ import 'package:shaap_mobile_app/models/order_model.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
-import 'package:shaap_mobile_app/utils/type_defs.dart';
 import 'package:shaap_mobile_app/utils/utils.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 

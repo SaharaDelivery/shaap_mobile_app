@@ -169,45 +169,41 @@ class OrderRepository {
       String? token = await _sharedPrefs.getString(key: 'x-auth-token');
 
       http.Response response = await http.get(
-          Uri.parse(
-            AppUrls.getOrderHistory,
-          ),
-          headers: {
-            "Content-Type": "application/json; charset=UTF-8",
-            "Authorization": "Token $token",
-          });
+        Uri.parse(AppUrls.getOrderHistory),
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+          "Authorization": "Token $token",
+        },
+      );
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
 
-        final List<dynamic> orderItemsResultList =
-            responseData[0]['order_items'];
+        List<OrderModel> orders = responseData.map<OrderModel>((json) {
+          List<OrderItemModel> orderItems =
+              (json['order_items'] as List<dynamic>)
+                  .map<OrderItemModel>((itemJson) => OrderItemModel(
+                        orderId: json['order_id'],
+                        cartItemId: itemJson['menu_item']['id'],
+                        name: itemJson['menu_item']['name'],
+                        price: itemJson['menu_item']['price'],
+                        imageUrl: itemJson['menu_item']['image'],
+                        quantity: itemJson['quantity'],
+                      ))
+                  .toList();
 
-        List<OrderModel> orders = responseData.map(
-          (e) {
-            final List<OrderItemModel> orderItems = orderItemsResultList
-                .map((item) => OrderItemModel(
-                      orderId: e['order_id'],
-                      cartItemId: item['menu_item']['id'],
-                      name: item['menu_item']['name'],
-                      price: item['menu_item']['price'],
-                      imageUrl: item['menu_item']['image'],
-                      quantity: item['quantity'],
-                    ))
-                .toList();
-            return OrderModel(
-              order_id: e['order_id'],
-              restaurant: Restaurant(
-                id: e['restaurant']['id'],
-                name: e['restaurant']['name'],
-              ),
-              status: '',
-              total_price: e['total_price'],
-              orderItem: orderItems,
-              date_created: e['date_created'],
-            );
-          },
-        ).toList();
+          return OrderModel(
+            order_id: json['order_id'],
+            restaurant: Restaurant(
+              id: json['restaurant']['id'],
+              name: json['restaurant']['name'],
+            ),
+            status: json['status'],
+            total_price: json['total_price'],
+            orderItem: orderItems,
+            date_created: json['date_created'],
+          );
+        }).toList();
 
         return orders;
       } else {

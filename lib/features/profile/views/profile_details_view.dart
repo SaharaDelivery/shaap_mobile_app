@@ -12,7 +12,6 @@ import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
 import 'package:shaap_mobile_app/utils/loader.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileDetailsView extends ConsumerWidget {
   const ProfileDetailsView({super.key});

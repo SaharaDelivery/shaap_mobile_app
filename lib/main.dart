@@ -8,13 +8,7 @@ import 'package:routemaster/routemaster.dart';
 
 import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart';
 import 'package:shaap_mobile_app/features/auth/repositories/auth_repository.dart';
-import 'package:shaap_mobile_app/features/auth/views/login_view.dart';
-import 'package:shaap_mobile_app/features/auth/views/profile_details_form.dart';
-import 'package:shaap_mobile_app/features/auth/views/sign_up_view.dart';
-import 'package:shaap_mobile_app/features/base_nav_wrapper/views/base_nav_wrapper.dart';
-import 'package:shaap_mobile_app/features/onboarding/views/onboarding_view.dart';
 import 'package:shaap_mobile_app/models/error_model.dart';
-import 'package:shaap_mobile_app/models/user_model.dart';
 import 'package:shaap_mobile_app/router.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/utils/shared_prefs.dart';

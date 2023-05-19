@@ -7,7 +7,7 @@ final cuisineFilterControllerProvider =
 );
 
 class CuisineFilterController extends StateNotifier<CuisineFilterModel> {
-  CuisineFilterController() : super(CuisineFilterModel('', [], '0.0'));
+  CuisineFilterController() : super(const CuisineFilterModel('', [], '0.0'));
 
   void updateFilter({
     String? name,

@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shaap_mobile_app/models/food_model.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
-import 'package:shaap_mobile_app/utils/string_extensions.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
 class RestaurantListTile extends StatelessWidget {
@@ -41,7 +40,7 @@ class RestaurantListTile extends StatelessWidget {
               Container(
                 height: 78.h,
                 width: 83.6.w,
-                decoration: BoxDecoration(),
+                decoration: const BoxDecoration(),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),
                   child: CachedNetworkImage(

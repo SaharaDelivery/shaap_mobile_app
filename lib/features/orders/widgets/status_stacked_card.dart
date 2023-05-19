@@ -107,10 +107,10 @@ class StatusStackedCard extends ConsumerWidget {
                   AvatarGlow(
                     glowColor: Pallete.yellowColor,
                     endRadius: 12.w,
-                    duration: Duration(milliseconds: 2000),
+                    duration: const Duration(milliseconds: 2000),
                     repeat: true,
                     showTwoGlows: true,
-                    repeatPauseDuration: Duration(milliseconds: 100),
+                    repeatPauseDuration: const Duration(milliseconds: 100),
                     child: CircleAvatar(
                       backgroundColor: Pallete.yellowColor,
                       radius: 4.w,

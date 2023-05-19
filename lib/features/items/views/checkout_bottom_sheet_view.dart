@@ -173,7 +173,7 @@ class _CheckoutBottomSheetState extends ConsumerState<CheckoutBottomSheet> {
                                                 addressesFuture.when(
                                                   data: (addresses) {
                                                     if (addresses.isEmpty) {
-                                                      return ErrorText(
+                                                      return const ErrorText(
                                                         error:
                                                             'You have no saved address',
                                                       );
@@ -591,7 +591,7 @@ class _CheckoutBottomSheetState extends ConsumerState<CheckoutBottomSheet> {
                               ),
                             ),
                             const Spacer(),
-                            Icon(Icons.arrow_forward_ios_rounded)
+                            const Icon(Icons.arrow_forward_ios_rounded)
                           ],
                         ),
                       ),
@@ -602,7 +602,7 @@ class _CheckoutBottomSheetState extends ConsumerState<CheckoutBottomSheet> {
                         dashColor: Pallete.dividerGreyColor,
                       ),
                       //! payment details
-                      AmountDetailsWidget(),
+                      const AmountDetailsWidget(),
                       const DottedLine(
                         dashColor: Pallete.dividerGreyColor,
                       ),

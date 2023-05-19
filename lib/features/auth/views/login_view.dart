@@ -8,7 +8,6 @@ import 'package:shaap_mobile_app/features/auth/controllers/auth_controller.dart'
 
 import 'package:shaap_mobile_app/features/auth/views/reset_password_view.dart';
 import 'package:shaap_mobile_app/features/auth/views/sign_up_view.dart';
-import 'package:shaap_mobile_app/features/auth/widgets/password_widget.dart';
 import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/app_fade_animation.dart';
@@ -172,13 +171,15 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   ),
                                   validator: (val) {
                                     if (val == null ||
-                                        val.isEmpty ||
-                                        val.length < 8 ||
-                                        !val.contains(RegExp(
-                                            r'[!@#$%^&*(),.?":{}|<>]')) ||
-                                        !val.contains(RegExp(r'[A-Z]')) ||
-                                        !val.contains(RegExp(r'[a-z]')) ||
-                                        !val.contains(RegExp(r'[0-9]'))) {
+                                            val.isEmpty ||
+                                            val.length < 8
+                                        // ||
+                                        // !val.contains(RegExp(
+                                        //     r'[!@#$%^&*(),.?":{}|<>]')) ||
+                                        // !val.contains(RegExp(r'[A-Z]')) ||
+                                        // !val.contains(RegExp(r'[a-z]')) ||
+                                        // !val.contains(RegExp(r'[0-9]'))
+                                        ) {
                                       return '';
                                     }
                                     return null;

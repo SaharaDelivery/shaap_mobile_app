@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:shaap_mobile_app/theme/palette.dart';
 
 class ChoiceWidget extends ConsumerWidget {
   final void Function()? onTap;
@@ -45,6 +44,5 @@ class ChoiceWidget extends ConsumerWidget {
         ),
       ),
     );
-    ;
   }
 }

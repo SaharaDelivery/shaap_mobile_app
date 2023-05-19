@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
 
 class PasswordWidget extends StatelessWidget {

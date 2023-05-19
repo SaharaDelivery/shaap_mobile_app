@@ -29,7 +29,7 @@ class _SearchRestaurantsViewState extends ConsumerState<SearchRestaurantsView> {
   ValueNotifier<bool> isFilterTapped = ValueNotifier(false);
   // ValueNotifier<int> selectedCuisineIndex = ValueNotifier(0);
   ValueNotifier<List<String>> selectedCuisineIdList = ValueNotifier([]);
-  CuisineFilterModel cuisineFilterModel = CuisineFilterModel('', [], '0.0');
+  CuisineFilterModel cuisineFilterModel = const CuisineFilterModel('', [], '0.0');
 
   void toggleFilterState() {
     isFilterTapped.value = !isFilterTapped.value;

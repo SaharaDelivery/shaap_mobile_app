@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shaap_mobile_app/features/profile/repositories/profile_repository.dart';
 import 'package:shaap_mobile_app/models/address_model.dart';
 import 'package:shaap_mobile_app/utils/nav.dart';
-import 'package:shaap_mobile_app/utils/shared_prefs.dart';
 
 // get saved addresses provider
 final getUsersSavedAddressProvider = FutureProvider.autoDispose((ref) {

@@ -1,10 +1,8 @@
-import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shaap_mobile_app/features/restaurants/models/cuisine_filter_model.dart';
 import 'package:shaap_mobile_app/features/restaurants/repositories/restaurants_repository.dart';
 import 'package:shaap_mobile_app/models/food_model.dart';
-import 'package:shaap_mobile_app/models/menu_model.dart';
 import 'package:shaap_mobile_app/models/restaurant_model.dart';
 
 //! the get all restaurants provider

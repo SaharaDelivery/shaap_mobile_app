@@ -13,6 +13,8 @@ import 'package:shaap_mobile_app/utils/app_fade_animation.dart';
 import 'package:shaap_mobile_app/utils/app_multi_value_listenable_builder.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
 import 'package:shaap_mobile_app/utils/loader.dart';
+import 'package:shaap_mobile_app/utils/myicon.dart';
+import 'package:shaap_mobile_app/utils/snack_bar.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
 import 'package:shaap_mobile_app/utils/text_input.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
@@ -26,10 +28,13 @@ class SignUpView extends ConsumerStatefulWidget {
 
 class _SignUpViewState extends ConsumerState<SignUpView> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final ValueNotifier<TextEditingController> _passwordController =
       ValueNotifier(TextEditingController());
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> isPasswordInvisible = ValueNotifier(true);
+  final ValueNotifier<bool> isConfirmPasswordInvisible = ValueNotifier(true);
   final ValueNotifier<String> typedPassword = ValueNotifier('');
 
 // navigate to profile details
@@ -48,6 +53,9 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
 
   void passwordVisibility() =>
       isPasswordInvisible.value = !isPasswordInvisible.value;
+
+  void confirmPasswordVisibility() =>
+      isConfirmPasswordInvisible.value = !isConfirmPasswordInvisible.value;
 
   @override
   void dispose() {
@@ -142,38 +150,86 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                                   splashColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: passwordVisibility,
-                                  child:
-                                      // SizedBox(
-                                      //   height: 10.h,
-                                      //   width: 10.w,
-                                      //   child: Image.asset(
-                                      //     'eye'.png,
-                                      //     color: isPasswordInvisible.value == true
-                                      //         ? Pallete.textGreydarker
-                                      //         : Pallete.yellowColor,
-                                      //   ),
-                                      // ),
-                                      isPasswordInvisible.value == true
-                                          ? Icon(PhosphorIcons.eyeSlash,
-                                              size: 20.w,
-                                              color: Pallete.textGreydarker)
-                                          : Icon(
-                                              PhosphorIcons.eyeBold,
-                                              size: 20.w,
-                                              color: Pallete.yellowColor,
-                                            ),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(right: 10.w),
+                                    child: MyIcon(
+                                      icon: isPasswordInvisible.value == true
+                                          ? 'passwordhide'
+                                          : 'passwordvisible',
+                                    ),
+                                  ),
                                 ),
                                 controller: _passwordController.value,
                                 obscuretext: isPasswordInvisible.value,
                                 validator: (val) {
                                   if (val == null ||
-                                      val.isEmpty ||
-                                      val.length < 8 ||
-                                      !val.contains(
-                                          RegExp(r'[!@#$%^&*(),.?":{}|<>]')) ||
-                                      !val.contains(RegExp(r'[A-Z]')) ||
-                                      !val.contains(RegExp(r'[a-z]')) ||
-                                      !val.contains(RegExp(r'[0-9]'))) {
+                                          val.isEmpty ||
+                                          val.length < 8
+                                      // ||
+                                      // !val.contains(
+                                      //     RegExp(r'[!@#$%^&*(),.?":{}|<>]')) ||
+                                      // !val.contains(RegExp(r'[A-Z]')) ||
+                                      // !val.contains(RegExp(r'[a-z]')) ||
+                                      // !val.contains(RegExp(r'[0-9]'))
+                                      ) {
+                                    return '';
+                                  }
+                                  return null;
+                                },
+                              );
+                            }),
+
+                        8.sbH,
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Password must be atleast 8 figures',
+                            style: TextStyle(
+                              color: Pallete.textGrey,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+
+                        24.sbH,
+                        ValueListenableBuilder(
+                            valueListenable: isConfirmPasswordInvisible,
+                            builder: (context, value, child) {
+                              return TextInputWidget(
+                                hintText: 'Confirm your password',
+                                inputTitle: 'Confirm Password',
+                                onChanged: (value) {
+                                  // typedPassword.value =
+                                  //     _passwordController.value.text;
+                                },
+                                suffixIcon: InkWell(
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: confirmPasswordVisibility,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(right: 10.w),
+                                    child: MyIcon(
+                                      icon: isConfirmPasswordInvisible.value ==
+                                              true
+                                          ? 'passwordhide'
+                                          : 'passwordvisible',
+                                    ),
+                                  ),
+                                ),
+                                controller: _confirmPasswordController,
+                                obscuretext: isConfirmPasswordInvisible.value,
+                                validator: (val) {
+                                  if (val == null ||
+                                          val.isEmpty ||
+                                          val.length < 8
+                                      //  ||
+                                      // !val.contains(
+                                      //     RegExp(r'[!@#$%^&*(),.?":{}|<>]')) ||
+                                      // !val.contains(RegExp(r'[A-Z]')) ||
+                                      // !val.contains(RegExp(r'[a-z]')) ||
+                                      // !val.contains(RegExp(r'[0-9]'))
+                                      ) {
                                     return '';
                                   }
                                   return null;
@@ -182,86 +238,91 @@ class _SignUpViewState extends ConsumerState<SignUpView> {
                             }),
                         //! TODO: implement pass word auth
                         // 8.sbH,
-                        ValueListenableBuilder(
-                            valueListenable: typedPassword,
-                            builder: (context, value, child) {
-                              return PasswordWidget(
-                                height:
-                                    typedPassword.value.isNotEmpty ? 54.h : 0,
-                                // icons
-                                iconUppercase: typedPassword.value
-                                        .contains(RegExp(r'[A-Z]'))
-                                    ? PhosphorIcons.checks
-                                    : PhosphorIcons.prohibit,
-                                iconLowercase: typedPassword.value
-                                        .contains(RegExp(r'[a-z]'))
-                                    ? PhosphorIcons.checks
-                                    : PhosphorIcons.prohibit,
-                                iconSymbol: typedPassword.value.contains(
-                                        RegExp(r'[!@#$%^&*(),.?":{}|<>]'))
-                                    ? PhosphorIcons.checks
-                                    : PhosphorIcons.prohibit,
-                                iconNumbers: typedPassword.value
-                                        .contains(RegExp(r'[0-9]'))
-                                    ? PhosphorIcons.checks
-                                    : PhosphorIcons.prohibit,
-                                iconLength: typedPassword.value.length <= 64 &&
-                                        typedPassword.value.length >= 8
-                                    ? PhosphorIcons.checks
-                                    : PhosphorIcons.prohibit,
+                        // ValueListenableBuilder(
+                        //     valueListenable: typedPassword,
+                        //     builder: (context, value, child) {
+                        //       return PasswordWidget(
+                        //         height:
+                        //             typedPassword.value.isNotEmpty ? 54.h : 0,
+                        //         // icons
+                        //         iconUppercase: typedPassword.value
+                        //                 .contains(RegExp(r'[A-Z]'))
+                        //             ? PhosphorIcons.checks
+                        //             : PhosphorIcons.prohibit,
+                        //         iconLowercase: typedPassword.value
+                        //                 .contains(RegExp(r'[a-z]'))
+                        //             ? PhosphorIcons.checks
+                        //             : PhosphorIcons.prohibit,
+                        //         iconSymbol: typedPassword.value.contains(
+                        //                 RegExp(r'[!@#$%^&*(),.?":{}|<>]'))
+                        //             ? PhosphorIcons.checks
+                        //             : PhosphorIcons.prohibit,
+                        //         iconNumbers: typedPassword.value
+                        //                 .contains(RegExp(r'[0-9]'))
+                        //             ? PhosphorIcons.checks
+                        //             : PhosphorIcons.prohibit,
+                        //         iconLength: typedPassword.value.length <= 64 &&
+                        //                 typedPassword.value.length >= 8
+                        //             ? PhosphorIcons.checks
+                        //             : PhosphorIcons.prohibit,
 
-                                // color
-                                colorLowercase: typedPassword.value
-                                        .contains(RegExp(r'[a-z]'))
-                                    ? Pallete.yellowColor
-                                    : Colors.red,
-                                colorUppercase: typedPassword.value
-                                        .contains(RegExp(r'[A-Z]'))
-                                    ? Pallete.yellowColor
-                                    : Colors.red,
-                                colorSymbol: typedPassword.value.contains(
-                                        RegExp(r'[!@#$%^&*(),.?":{}|<>]'))
-                                    ? Pallete.yellowColor
-                                    : Colors.red,
-                                colorNumbers: typedPassword.value
-                                        .contains(RegExp(r'[0-9]'))
-                                    ? Pallete.yellowColor
-                                    : Colors.red,
-                                colorLength: typedPassword.value.length <= 64 &&
-                                        typedPassword.value.length >= 8
-                                    ? Pallete.yellowColor
-                                    : Colors.red,
-                                // fontweight
-                                fontWeightLowercase: typedPassword.value
-                                        .contains(RegExp(r'[a-z]'))
-                                    ? FontWeight.bold
-                                    : FontWeight.w400,
-                                fontWeightUppercase: typedPassword.value
-                                        .contains(RegExp(r'[A-Z]'))
-                                    ? FontWeight.bold
-                                    : FontWeight.w400,
-                                fontWeightSymbol: typedPassword.value.contains(
-                                        RegExp(r'[!@#$%^&*(),.?":{}|<>]'))
-                                    ? FontWeight.bold
-                                    : FontWeight.w400,
-                                fontWeightNumbers: typedPassword.value
-                                        .contains(RegExp(r'[0-9]'))
-                                    ? FontWeight.bold
-                                    : FontWeight.w400,
-                                fontWeightLength:
-                                    typedPassword.value.length <= 64 &&
-                                            typedPassword.value.length >= 8
-                                        ? FontWeight.bold
-                                        : FontWeight.w400,
-                              );
-                            }),
+                        //         // color
+                        //         colorLowercase: typedPassword.value
+                        //                 .contains(RegExp(r'[a-z]'))
+                        //             ? Pallete.yellowColor
+                        //             : Colors.red,
+                        //         colorUppercase: typedPassword.value
+                        //                 .contains(RegExp(r'[A-Z]'))
+                        //             ? Pallete.yellowColor
+                        //             : Colors.red,
+                        //         colorSymbol: typedPassword.value.contains(
+                        //                 RegExp(r'[!@#$%^&*(),.?":{}|<>]'))
+                        //             ? Pallete.yellowColor
+                        //             : Colors.red,
+                        //         colorNumbers: typedPassword.value
+                        //                 .contains(RegExp(r'[0-9]'))
+                        //             ? Pallete.yellowColor
+                        //             : Colors.red,
+                        //         colorLength: typedPassword.value.length <= 64 &&
+                        //                 typedPassword.value.length >= 8
+                        //             ? Pallete.yellowColor
+                        //             : Colors.red,
+                        //         // fontweight
+                        //         fontWeightLowercase: typedPassword.value
+                        //                 .contains(RegExp(r'[a-z]'))
+                        //             ? FontWeight.bold
+                        //             : FontWeight.w400,
+                        //         fontWeightUppercase: typedPassword.value
+                        //                 .contains(RegExp(r'[A-Z]'))
+                        //             ? FontWeight.bold
+                        //             : FontWeight.w400,
+                        //         fontWeightSymbol: typedPassword.value.contains(
+                        //                 RegExp(r'[!@#$%^&*(),.?":{}|<>]'))
+                        //             ? FontWeight.bold
+                        //             : FontWeight.w400,
+                        //         fontWeightNumbers: typedPassword.value
+                        //                 .contains(RegExp(r'[0-9]'))
+                        //             ? FontWeight.bold
+                        //             : FontWeight.w400,
+                        //         fontWeightLength:
+                        //             typedPassword.value.length <= 64 &&
+                        //                     typedPassword.value.length >= 8
+                        //                 ? FontWeight.bold
+                        //                 : FontWeight.w400,
+                        //       );
+                        //     }),
 
                         32.sbH,
                         //get started button
                         BButton(
                           onTap: () async {
-                            if (_formKey.currentState!.validate() == true) {
+                            if (_formKey.currentState!.validate() == true &&
+                                _passwordController.value.text ==
+                                    _confirmPasswordController.text) {
                               signUpUser();
+                            } else {
+                              showSnackBar(context,
+                                  'Make sure your pssword is confirmed');
                             }
                           },
                           text: AppTexts.getStarted,

@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shaap_mobile_app/models/cuisine_model.dart';
 import 'package:shaap_mobile_app/models/food_model.dart';
-import 'package:shaap_mobile_app/models/menu_model.dart';
 import 'package:shaap_mobile_app/models/restaurant_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shaap_mobile_app/shared/app_urls.dart';

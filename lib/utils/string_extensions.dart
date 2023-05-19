@@ -25,10 +25,14 @@ extension StringCasingExtension on String {
 }
 
 extension ImagePath on String {
-  String get svg => 'lib/assets/images/$this.svg';
   String get png => 'lib/assets/images/$this.png';
   String get jpg => 'lib/assets/images/$this.jpg';
   String get gif => 'lib/assets/images/$this.gif';
+  String get svg => 'lib/assets/images/$this.svg';
+}
+
+extension VectorPath on String {
+  String get svgg => 'lib/assets/vectors/$this.svg';
 }
 
 extension NumExtensions on int {

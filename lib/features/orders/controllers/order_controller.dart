@@ -6,8 +6,6 @@ import 'package:shaap_mobile_app/features/orders/repositories/order_repository.d
 import 'package:shaap_mobile_app/models/order_item_model.dart';
 import 'package:shaap_mobile_app/models/order_model.dart';
 import 'package:shaap_mobile_app/utils/shared_prefs.dart';
-import 'package:shaap_mobile_app/utils/type_defs.dart';
-import 'package:shaap_mobile_app/utils/utils.dart';
 
 //! check If Order Exists In Restaurant provider
 final checkIfOrderExistsInRestaurantProvider =

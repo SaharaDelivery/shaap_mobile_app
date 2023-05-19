@@ -54,32 +54,30 @@ class Pallete {
     drawerTheme: const DrawerThemeData(
       backgroundColor: drawerColor,
     ),
-    primaryColor: yellowColor,
-    backgroundColor:
-        drawerColor, // will be used as alternative background color
+    primaryColor: yellowColor, // will be used as alternative background color
     canvasColor: greyColor,
   );
 
   static var lightModeAppTheme = ThemeData.light().copyWith(
-      // textTheme: GoogleFonts.spaceGroteskTextTheme(),
-      // textTheme: ThemeData.light().textTheme.apply(
-      //       fontFamily: 'Sk-Modernist',
-      //     ),
-      scaffoldBackgroundColor: whiteColor,
-      cardColor: greyColor,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: whiteColor,
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: blackColor,
-        ),
-      ),
-      drawerTheme: const DrawerThemeData(
-        backgroundColor: whiteColor,
-      ),
-      primaryColor: yellowColor,
+    // textTheme: GoogleFonts.spaceGroteskTextTheme(),
+    // textTheme: ThemeData.light().textTheme.apply(
+    //       fontFamily: 'Sk-Modernist',
+    //     ),
+    scaffoldBackgroundColor: whiteColor,
+    cardColor: greyColor,
+    appBarTheme: const AppBarTheme(
       backgroundColor: whiteColor,
-      canvasColor: blackColor);
+      elevation: 0,
+      iconTheme: IconThemeData(
+        color: blackColor,
+      ),
+    ),
+    drawerTheme: const DrawerThemeData(
+      backgroundColor: whiteColor,
+    ),
+    primaryColor: yellowColor,
+    canvasColor: blackColor,
+  );
 }
 
 class ThemeNotifier extends StateNotifier<ThemeData> {

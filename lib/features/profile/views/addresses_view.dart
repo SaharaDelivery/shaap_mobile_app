@@ -11,7 +11,6 @@ import 'package:shaap_mobile_app/shared/app_texts.dart';
 import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
 import 'package:shaap_mobile_app/utils/error_text.dart';
-import 'package:shaap_mobile_app/utils/failure.dart';
 import 'package:shaap_mobile_app/utils/loader.dart';
 import 'package:shaap_mobile_app/utils/nav.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
@@ -66,7 +65,7 @@ class AddressesView extends ConsumerWidget {
                   child: addressesFuture.when(
                     data: (addresses) {
                       if (addresses.isEmpty) {
-                        return const ErrorText(error: 'E no dey');
+                        return const ErrorText(error: 'You have no saved addresses');
                       }
 
                       return ListView.builder(

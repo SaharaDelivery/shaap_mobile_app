@@ -11,7 +11,6 @@ import 'package:shaap_mobile_app/theme/palette.dart';
 import 'package:shaap_mobile_app/utils/app_fade_animation.dart';
 import 'package:shaap_mobile_app/utils/button.dart';
 import 'package:shaap_mobile_app/utils/loader.dart';
-import 'package:shaap_mobile_app/utils/shared_prefs.dart';
 import 'package:shaap_mobile_app/utils/string_extensions.dart';
 import 'package:shaap_mobile_app/utils/text_input.dart';
 import 'package:shaap_mobile_app/utils/widget_extensions.dart';
@@ -186,84 +185,109 @@ class _ProfileDetailsFormViewState
                   ),
                   24.sbH,
                   AppFadeAnimation(
-                    delay: 2.2,
-                    child: SizedBox(
-                      height: 74.h,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppTexts.phone,
-                            style: TextStyle(
-                                color: Pallete.textGreydarker,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(
-                            height: 48.h,
-                            child: IntlPhoneField(
-                              controller: _phoneController,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                // LengthLimitingTextInputFormatter(10)
-                              ],
-                              initialCountryCode: 'NG',
-                              flagsButtonMargin: EdgeInsets.only(left: 10.w),
-                              // disableLengthCheck: true,
-                              dropdownIconPosition: IconPosition.leading,
-                              dropdownIcon: const Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Pallete.textGreylighter,
-                              ),
-                              decoration: InputDecoration(
-                                helperText: " ",
-                                helperStyle: const TextStyle(fontSize: 0.0005),
-                                errorStyle: const TextStyle(fontSize: 0.0005),
-                                isDense: true,
-                                border: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Pallete.borderGrey),
-                                  borderRadius: BorderRadius.circular(8.r),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Pallete.borderGrey),
-                                  borderRadius: BorderRadius.circular(8.r),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Pallete.borderGrey),
-                                  borderRadius: BorderRadius.circular(8.r),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide:
-                                      const BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(8.r),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Pallete.borderGrey),
-                                  borderRadius: BorderRadius.circular(8.r),
-                                ),
-                              ),
-                              onChanged: (phone) {
-                                String phoneNumber = phone.number.substring(1);
-
-                                setState(() => phoneNumberWithCountryCode =
-                                    '${phone.countryCode}$phoneNumber');
-                              },
-                              onCountryChanged: (country) {
-                                log('Country changed to: ${country.name}');
-                                log(_phoneController.text);
-                              },
-                              validator: (val) {},
-                            ),
-                          ),
-                        ],
-                      ),
+                    delay: 2,
+                    child: TextInputWidget(
+                      hintText: '080----------',
+                      inputTitle: AppTexts.phone,
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '';
+                        }
+                        return null;
+                      },
                     ),
                   ),
+
+                  // AppFadeAnimation(
+                  //   delay: 2.2,
+                  //   child: SizedBox(
+                  //     height: 74.h,
+                  //     child: Column(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Text(
+                  //           AppTexts.phone,
+                  //           style: TextStyle(
+                  //               color: Pallete.textGreydarker,
+                  //               fontSize: 14.sp,
+                  //               fontWeight: FontWeight.w500),
+                  //         ),
+                  //         SizedBox(
+                  //           height: 48.h,
+                  //           child: IntlPhoneField(
+                  //             controller: _phoneController,
+                  //             inputFormatters: [
+                  //               FilteringTextInputFormatter.digitsOnly,
+                  //               // LengthLimitingTextInputFormatter(10)
+                  //             ],
+                  //             initialCountryCode: 'NG',
+                  //             flagsButtonMargin: EdgeInsets.only(left: 10.w),
+                  //             // disableLengthCheck: true,
+                  //             dropdownIconPosition: IconPosition.trailing,
+                  //             dropdownIcon: const Icon(
+                  //               Icons.keyboard_arrow_down,
+                  //               color: Pallete.textGreylighter,
+                  //             ),
+                  //             dropdownTextStyle: TextStyle(
+                  //               fontSize: 16.sp,
+                  //             ),
+                  //             decoration: InputDecoration(
+                  //               contentPadding: EdgeInsets.zero,
+                  //               helperText: " ",
+                  //               helperStyle: const TextStyle(fontSize: 0.0005),
+                  //               errorStyle: const TextStyle(fontSize: 0.0005),
+                  //               isDense: true,
+                  //               border: OutlineInputBorder(
+                  //                 borderSide: const BorderSide(
+                  //                     color: Pallete.borderGrey),
+                  //                 borderRadius: BorderRadius.circular(8.r),
+                  //               ),
+                  //               enabledBorder: OutlineInputBorder(
+                  //                 borderSide: const BorderSide(
+                  //                     color: Pallete.borderGrey),
+                  //                 borderRadius: BorderRadius.circular(8.r),
+                  //               ),
+                  //               focusedBorder: OutlineInputBorder(
+                  //                 borderSide: const BorderSide(
+                  //                     color: Pallete.yellowColor),
+                  //                 borderRadius: BorderRadius.circular(8.r),
+                  //               ),
+                  //               errorBorder: OutlineInputBorder(
+                  //                 borderSide:
+                  //                     const BorderSide(color: Colors.red),
+                  //                 borderRadius: BorderRadius.circular(8.r),
+                  //               ),
+                  //               focusedErrorBorder: OutlineInputBorder(
+                  //                 borderSide: const BorderSide(
+                  //                     color: Pallete.yellowColor),
+                  //                 borderRadius: BorderRadius.circular(8.r),
+                  //               ),
+                  //             ),
+                  //             onChanged: (phone) {
+                  //               String phoneNumber = phone.number.substring(1);
+
+                  //               setState(() => phoneNumberWithCountryCode =
+                  //                   '${phone.countryCode}$phoneNumber');
+                  //             },
+                  //             onCountryChanged: (country) {
+                  //               log('Country changed to: ${country.name}');
+                  //               log(_phoneController.text);
+                  //             },
+                  //             validator: (val) {
+                  //               return null;
+                  //             },
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
 
                   180.sbH,
                   // continue button
@@ -271,6 +295,7 @@ class _ProfileDetailsFormViewState
                     delay: 2.4,
                     child: BButton(
                       onTap: () async {
+                        // log(_phoneController.text);
                         if (_formKey.currentState!.validate() == true) {
                           setupProfileDetails();
                         }
