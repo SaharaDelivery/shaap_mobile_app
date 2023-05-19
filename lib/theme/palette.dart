@@ -9,28 +9,34 @@ final themeNotifierProvider =
 
 class Pallete {
   // Colors
-  static const blackColor = Color.fromRGBO(1, 1, 1, 1); // primary color
-  static const greyColor = Color(0xff6A8189); // secondary color
+  static const blackColor = Color(0xff000000);
+  static const greyColor = Color(0xff6A8189);
   static const drawerColor = Color.fromRGBO(18, 18, 18, 1);
-  static const whiteColor = Colors.white;
-  static const brownColor = Color(0xff593C2A);
-  static const primaryTeal = Color(0xff057672);
-  static const offWhiteTeal = Color(0xfff3f8f8);
-  static const primaryPurple = Color(0xff46348C);
-  static const tileShadow = Color(0xffC1D1B0);
-  static const backButtonGrey = Color(0xffF4F5F5);
-  static const orange = Color(0xffD95700);
-  static const textGrey = Color(0xff969696);
-  static const imagePlaceHolder1 = Color(0xffD9D9D9);
-  static var imagePlaceHolder2 = const Color(0xff969696).withOpacity(0.29);
-  static const imagePlaceHolder3 = Color(0xffECE9D9);
-  static const imagePlaceHolder4 = Color(0xffA7CAE3);
-  static const greey = Color(0xffC4C4C4);
-  static const thickRed = Color(0xffE41111);
-  static const blackTint = Color(0xff121212);
-  static const lightbrownColor = Color(0xffB48669);
-  static const textGreen = Color(0xff4E6139);
-  static const blueColor = Color(0xff034DC6);
+  static const whiteColor = Color(0xffFFFFFF);
+  static const yellowColor = Color(0xffFFCB00);
+  static const textBlack = Color(0xff101828);
+  static const textGrey = Color(0xff475467);
+  static const textGreydarker = Color(0xff344054);
+  static const textGreylighter = Color(0xff667085);
+  static const borderGrey = Color(0xffD0D5DD);
+  static const dotGreyColor = Color(0xffF2F4F7);
+  static const dividerGreyColor = Color(0xffEAECF0);
+  static const grey = Color(0xffEEEEEE);
+  static const red = Color(0xffD92D20);
+  static const lightRed = Color(0xffFEE4E2);
+  static const newGrey = Color(0xffF2F4F7);
+  static const completeGreen = Color(0xff039855);
+  static const completeGreenContainer = Color(0xffD1FADF);
+  static const processingOrange = Color(0xffF79009);
+  static const processingOrangeContainer = Color(0xffFEF0C7);
+  static const cancelledRed = Color(0xffB42318);
+  static const cancelledRedContainer = Color(0xffFEE4E2);
+  static const shadowGrey = Color(0xff827878);
+  static const trackOrdersGrey = Color(0xffF9FAFB);
+  static const tileBorderGrey = Color(0xffEAECF0);
+  static const lighterRed = Color(0xffFEF3F2);
+  static const pink = Color(0xffFECDCA);
+
   // Themes
   static var darkModeAppTheme = ThemeData.dark().copyWith(
     // textTheme: GoogleFonts.spaceGroteskTextTheme(),
@@ -48,32 +54,30 @@ class Pallete {
     drawerTheme: const DrawerThemeData(
       backgroundColor: drawerColor,
     ),
-    primaryColor: blueColor,
-    backgroundColor:
-        drawerColor, // will be used as alternative background color
+    primaryColor: yellowColor, // will be used as alternative background color
     canvasColor: greyColor,
   );
 
   static var lightModeAppTheme = ThemeData.light().copyWith(
-      // textTheme: GoogleFonts.spaceGroteskTextTheme(),
-      // textTheme: ThemeData.light().textTheme.apply(
-      //       fontFamily: 'Sk-Modernist',
-      //     ),
-      scaffoldBackgroundColor: whiteColor,
-      cardColor: greyColor,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: whiteColor,
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: blackColor,
-        ),
-      ),
-      drawerTheme: const DrawerThemeData(
-        backgroundColor: whiteColor,
-      ),
-      primaryColor: blueColor,
+    // textTheme: GoogleFonts.spaceGroteskTextTheme(),
+    // textTheme: ThemeData.light().textTheme.apply(
+    //       fontFamily: 'Sk-Modernist',
+    //     ),
+    scaffoldBackgroundColor: whiteColor,
+    cardColor: greyColor,
+    appBarTheme: const AppBarTheme(
       backgroundColor: whiteColor,
-      canvasColor: blackColor);
+      elevation: 0,
+      iconTheme: IconThemeData(
+        color: blackColor,
+      ),
+    ),
+    drawerTheme: const DrawerThemeData(
+      backgroundColor: whiteColor,
+    ),
+    primaryColor: yellowColor,
+    canvasColor: blackColor,
+  );
 }
 
 class ThemeNotifier extends StateNotifier<ThemeData> {

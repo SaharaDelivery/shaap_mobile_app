@@ -19,14 +19,14 @@ extension WidgetExtensionss on num {
 
 extension WidgetExtensions on double {
   Widget get sbH => SizedBox(
-        height: this.h,
+        height: h,
       );
 
   Widget get sbW => SizedBox(
-        width: this.w,
+        width: w,
       );
 
-  EdgeInsetsGeometry get padA => EdgeInsets.all(this);
+  EdgeInsetsGeometry get padA => EdgeInsets.all(w);
 
   EdgeInsetsGeometry get padV => EdgeInsets.symmetric(vertical: h);
 
